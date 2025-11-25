@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
-    <property name="author">Yasmine Khemiri</property>
+    <property name="author">Y. Khemiri und U. Zeidler</property>
     <property name="createdBy">Eclipse BIRT Designer Version 4.13.0.v202303021806</property>
-    <text-property name="title">verinice - ISMS Management Summary Report</text-property>
+    <text-property name="title">verinice - ITGS: ISMS Management Summary Report</text-property>
     <list-property name="userProperties">
         <structure>
             <property name="name">Data Cube.overview_requirements.x</property>
@@ -21032,7 +21032,7 @@ else&#13;
         </grid>
         <grid name="a5 - risikoanalyse" id="15683">
             <property name="pageBreakBefore">always</property>
-            <property name="height">20.614583333333332in</property>
+            <property name="height">12.760416666666666in</property>
             <property name="width">7.770833333333333in</property>
             <property name="dataSet">ITNetwork_LTR</property>
             <list-property name="visibility">
@@ -21081,7 +21081,7 @@ else&#13;
                 </cell>
             </row>
             <row id="16300">
-                <property name="height">2.5520833333333335in</property>
+                <property name="height">2.28125in</property>
                 <cell id="16301">
                     <text id="16302">
                         <property name="textAlign">center</property>
@@ -21293,10 +21293,1548 @@ In der ersten Tabelle wird die Anzahl der Zielobjekte gezeigt, für die eine Ris
                     </table>
                 </cell>
             </row>
-            <row id="15850">
-                <property name="height">0.53125in</property>
-                <cell id="15851">
+            <row id="16346">
+                <property name="height">0.4791666666666667in</property>
+                <cell id="16347">
                     <property name="textAlign">center</property>
+                    <label id="15755">
+                        <property name="fontSize">14pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="marginTop">10pt</property>
+                        <property name="textAlign">center</property>
+                        <structure name="toc">
+                            <expression name="expressionValue" type="javascript">"Brutto-Risiko"</expression>
+                        </structure>
+                        <text-property name="text">Brutto-Risiko </text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="16348">
+                <property name="height">0.3645833333333333in</property>
+                <cell id="16349">
+                    <property name="textAlign">center</property>
+                    <text id="16321">
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[Im Folgenden werden die Brutto-Risiken (Risiken ohne zusätzliche Maßnahmen) dargestellt.]]></text-property>
+                    </text>
+                </cell>
+            </row>
+            <row id="16350">
+                <cell id="16351">
+                    <property name="textAlign">center</property>
+                    <extended-item extensionName="Chart" id="15750">
+                        <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
+  <Version>2.6.1</Version>
+  <Type>Bar Chart</Type>
+  <SubType>Side-by-side</SubType>
+  <Block>
+    <Children xsi:type="layout:TitleBlock">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>true</Visible>
+      <Label>
+        <Caption>
+          <Value>Anzahl der Risiken ohne zusätzliche Maßnahmen</Value>
+          <Font>
+            <Size>12.0</Size>
+            <Bold>true</Bold>
+            <Alignment>
+              <horizontalAlignment>Center</horizontalAlignment>
+              <verticalAlignment>Center</verticalAlignment>
+            </Alignment>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>true</Visible>
+      </Label>
+    </Children>
+    <Children xsi:type="layout:Plot">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </Outline>
+      <Visible>true</Visible>
+      <HorizontalSpacing>5</HorizontalSpacing>
+      <VerticalSpacing>5</VerticalSpacing>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>0.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>0.0</Right>
+        </Insets>
+      </ClientArea>
+    </Children>
+    <Children xsi:type="layout:Legend">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>false</Visible>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>2.0</Top>
+          <Left>2.0</Left>
+          <Bottom>2.0</Bottom>
+          <Right>2.0</Right>
+        </Insets>
+      </ClientArea>
+      <Text>
+        <Value></Value>
+        <Font>
+          <Alignment/>
+        </Font>
+      </Text>
+      <Orientation>Vertical</Orientation>
+      <Direction>Top_Bottom</Direction>
+      <Separator>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </Separator>
+      <Position>Right</Position>
+      <ItemType>Series</ItemType>
+      <Title>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Title>
+      <TitlePosition>Above</TitlePosition>
+    </Children>
+    <Bounds>
+      <Left>0.0</Left>
+      <Top>0.0</Top>
+      <Width>424.5</Width>
+      <Height>159.0</Height>
+    </Bounds>
+    <Insets>
+      <Top>3.0</Top>
+      <Left>3.0</Left>
+      <Bottom>3.0</Bottom>
+      <Right>3.0</Right>
+    </Insets>
+    <Row>-1</Row>
+    <Column>-1</Column>
+    <Rowspan>-1</Rowspan>
+    <Columnspan>-1</Columnspan>
+    <Outline>
+      <Style>Solid</Style>
+      <Thickness>1</Thickness>
+      <Color>
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Color>
+      <Visible>false</Visible>
+    </Outline>
+    <Visible>true</Visible>
+  </Block>
+  <Dimension>Two_Dimensional_With_Depth</Dimension>
+  <Script>
+/**
+ * Called before drawing each datapoint graphical representation or marker.
+ * 
+ * @param dph
+ *            DataPointHints
+ * @param fill
+ *            Fill
+ * @param icsc
+ *            IChartScriptContext
+ */
+
+function beforeDrawDataPoint( dph, fill, icsc )
+{
+
+reportContext = icsc.getExternalContext().getObject();
+
+color = reportContext.getPersistentGlobalVariable(&quot;risk_color_&quot;+dph.getBaseValue());
+if(color!=null){
+	fill.setTransparency(255);
+	fill.setRed(color[0]);
+	fill.setGreen(color[1]);
+	fill.setBlue(color[2]);
+}
+
+}
+</Script>
+  <Units>Points</Units>
+  <SeriesThickness>10.0</SeriesThickness>
+  <ExtendedProperties>
+    <Name>enable.area.alt</Name>
+    <Value>false</Value>
+  </ExtendedProperties>
+  <SampleData>
+    <BaseSampleData>
+      <DataSetRepresentation>A, B, C</DataSetRepresentation>
+    </BaseSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>5,4,12</DataSetRepresentation>
+      <SeriesDefinitionIndex>0</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+  </SampleData>
+  <Interactivity/>
+  <EmptyMessage>
+    <Caption>
+      <Value>This chart contains no data.</Value>
+      <Font>
+        <Alignment>
+          <horizontalAlignment>Center</horizontalAlignment>
+          <verticalAlignment>Center</verticalAlignment>
+        </Alignment>
+      </Font>
+    </Caption>
+    <Background xsi:type="attribute:ColorDefinition">
+      <Transparency>64</Transparency>
+      <Red>127</Red>
+      <Green>127</Green>
+      <Blue>127</Blue>
+    </Background>
+    <Outline>
+      <Color>
+        <Transparency>128</Transparency>
+        <Red>127</Red>
+        <Green>127</Green>
+        <Blue>127</Blue>
+      </Color>
+      <Visible>true</Visible>
+    </Outline>
+    <Insets>
+      <Top>10.0</Top>
+      <Left>10.0</Left>
+      <Bottom>10.0</Bottom>
+      <Right>10.0</Right>
+    </Insets>
+    <Visible>false</Visible>
+  </EmptyMessage>
+  <Axes>
+    <Type>Text</Type>
+    <Title>
+      <Caption>
+        <Value>X-Axis Title</Value>
+        <Font>
+          <Size>14.0</Size>
+          <Bold>true</Bold>
+          <Alignment>
+            <horizontalAlignment>Center</horizontalAlignment>
+            <verticalAlignment>Center</verticalAlignment>
+          </Alignment>
+        </Font>
+      </Caption>
+      <Background xsi:type="attribute:ColorDefinition">
+        <Transparency>0</Transparency>
+        <Red>255</Red>
+        <Green>255</Green>
+        <Blue>255</Blue>
+      </Background>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+      </Outline>
+      <Insets>
+        <Top>0.0</Top>
+        <Left>2.0</Left>
+        <Bottom>0.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Visible>false</Visible>
+    </Title>
+    <TitlePosition>Below</TitlePosition>
+    <AssociatedAxes>
+      <Type>Linear</Type>
+      <Title>
+        <Caption>
+          <Value>Y-Axis Title</Value>
+          <Font>
+            <Size>14.0</Size>
+            <Bold>true</Bold>
+            <Alignment>
+              <horizontalAlignment>Center</horizontalAlignment>
+              <verticalAlignment>Center</verticalAlignment>
+            </Alignment>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Title>
+      <TitlePosition>Left</TitlePosition>
+      <SeriesDefinitions>
+        <Query>
+          <Definition></Definition>
+          <Grouping>
+            <GroupType>Text</GroupType>
+          </Grouping>
+        </Query>
+        <SeriesPalette>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>80</Red>
+            <Green>166</Green>
+            <Blue>218</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>242</Red>
+            <Green>88</Green>
+            <Blue>106</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>232</Red>
+            <Green>172</Green>
+            <Blue>57</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>255</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>64</Red>
+            <Green>128</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>128</Green>
+            <Blue>192</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>170</Red>
+            <Green>85</Green>
+            <Blue>85</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>128</Green>
+            <Blue>0</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>192</Red>
+            <Green>192</Green>
+            <Blue>192</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>192</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>7</Red>
+            <Green>146</Green>
+            <Blue>94</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>128</Green>
+            <Blue>255</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>128</Green>
+            <Blue>192</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>128</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>128</Green>
+            <Blue>192</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>0</Green>
+            <Blue>255</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>64</Green>
+            <Blue>64</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>128</Green>
+            <Blue>64</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>80</Red>
+            <Green>240</Green>
+            <Blue>120</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>64</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>0</Green>
+            <Blue>64</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>0</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>128</Green>
+            <Blue>64</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>128</Red>
+            <Green>128</Green>
+            <Blue>128</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>128</Green>
+            <Blue>255</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>64</Green>
+            <Blue>0</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>255</Red>
+            <Green>128</Green>
+            <Blue>0</Blue>
+          </Entries>
+        </SeriesPalette>
+        <Series xsi:type="type:BarSeries">
+          <Visible>true</Visible>
+          <Label>
+            <Caption>
+              <Value></Value>
+              <Font>
+                <Alignment/>
+              </Font>
+            </Caption>
+            <Background xsi:type="attribute:ColorDefinition">
+              <Transparency>0</Transparency>
+              <Red>255</Red>
+              <Green>255</Green>
+              <Blue>255</Blue>
+            </Background>
+            <Outline>
+              <Style>Solid</Style>
+              <Thickness>1</Thickness>
+              <Color>
+                <Transparency>255</Transparency>
+                <Red>0</Red>
+                <Green>0</Green>
+                <Blue>0</Blue>
+              </Color>
+              <Visible>false</Visible>
+            </Outline>
+            <Insets>
+              <Top>0.0</Top>
+              <Left>2.0</Left>
+              <Bottom>0.0</Bottom>
+              <Right>3.0</Right>
+            </Insets>
+            <Visible>true</Visible>
+          </Label>
+          <DataDefinition>
+            <Definition>row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]</Definition>
+            <Grouping>
+              <Enabled>true</Enabled>
+              <GroupType>Text</GroupType>
+              <AggregateExpression>Count</AggregateExpression>
+            </Grouping>
+          </DataDefinition>
+          <SeriesIdentifier>Series 1</SeriesIdentifier>
+          <DataPoint>
+            <Components>
+              <Type>Orthogonal_Value</Type>
+            </Components>
+            <Separator>, </Separator>
+          </DataPoint>
+          <LabelPosition>Outside</LabelPosition>
+          <Stacked>false</Stacked>
+          <Triggers>
+            <Condition>onmouseover</Condition>
+            <Action>
+              <Type>Show_Tooltip</Type>
+              <Value xsi:type="attribute:TooltipValue">
+                <Text></Text>
+                <Delay>200</Delay>
+              </Value>
+            </Action>
+          </Triggers>
+          <Riser>Rectangle</Riser>
+        </Series>
+      </SeriesDefinitions>
+      <Orientation>Vertical</Orientation>
+      <LineAttributes>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </LineAttributes>
+      <Label>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>true</Visible>
+      </Label>
+      <LabelPosition>Left</LabelPosition>
+      <MajorGrid>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>196</Red>
+            <Green>196</Green>
+            <Blue>196</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <TickStyle>Across</TickStyle>
+        <TickAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>196</Red>
+            <Green>196</Green>
+            <Blue>196</Blue>
+          </Color>
+          <Visible>true</Visible>
+        </TickAttributes>
+      </MajorGrid>
+      <MinorGrid>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>225</Red>
+            <Green>225</Green>
+            <Blue>225</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <TickStyle>Across</TickStyle>
+        <TickAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>225</Red>
+            <Green>225</Green>
+            <Blue>225</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </TickAttributes>
+      </MinorGrid>
+      <Scale>
+        <MinorGridsPerUnit>5</MinorGridsPerUnit>
+      </Scale>
+      <Origin>
+        <Type>Min</Type>
+        <Value xsi:type="data:NumberDataElement">
+          <Value>0.0</Value>
+        </Value>
+      </Origin>
+      <PrimaryAxis>true</PrimaryAxis>
+      <Percent>false</Percent>
+    </AssociatedAxes>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>80</Red>
+          <Green>166</Green>
+          <Blue>218</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>242</Red>
+          <Green>88</Green>
+          <Blue>106</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>232</Red>
+          <Green>172</Green>
+          <Blue>57</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>255</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>64</Red>
+          <Green>128</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>128</Green>
+          <Blue>192</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>170</Red>
+          <Green>85</Green>
+          <Blue>85</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>128</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>192</Red>
+          <Green>192</Green>
+          <Blue>192</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>192</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>7</Red>
+          <Green>146</Green>
+          <Blue>94</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>128</Green>
+          <Blue>255</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>128</Green>
+          <Blue>192</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>128</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>128</Green>
+          <Blue>192</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>0</Green>
+          <Blue>255</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>64</Green>
+          <Blue>64</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>128</Green>
+          <Blue>64</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>80</Red>
+          <Green>240</Green>
+          <Blue>120</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>64</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>0</Green>
+          <Blue>64</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>0</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>128</Green>
+          <Blue>64</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>128</Red>
+          <Green>128</Green>
+          <Blue>128</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>128</Green>
+          <Blue>255</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>64</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>128</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series>
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;] == &quot;null&quot;) {&#xD;
+&quot;Unbearbeitet&quot;}&#xD;
+else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;gering&quot;) {&#xD;
+&quot;gering&quot;}&#xD;
+else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;mittel&quot;) {&#xD;
+&quot;mittel&quot;}&#xD;
+else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;hoch&quot;) {&#xD;
+&quot;hoch&quot;}&#xD;
+else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;sehr hoch&quot;) {&#xD;
+&quot;sehr hoch&quot;}&#xD;
+else&#xD;
+row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;];</Definition>
+        </DataDefinition>
+        <SeriesIdentifier></SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+      </Series>
+      <Grouping>
+        <Enabled>true</Enabled>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+      <Sorting>Ascending</Sorting>
+      <SortKey>
+        <Definition>row[&quot;sortRisikoMitMassnahmen&quot;]</Definition>
+      </SortKey>
+      <SortStrength>0</SortStrength>
+    </SeriesDefinitions>
+    <Orientation>Horizontal</Orientation>
+    <LineAttributes>
+      <Style>Solid</Style>
+      <Thickness>1</Thickness>
+      <Color>
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Color>
+      <Visible>true</Visible>
+    </LineAttributes>
+    <Label>
+      <Caption>
+        <Value></Value>
+        <Font>
+          <Alignment/>
+        </Font>
+      </Caption>
+      <Background xsi:type="attribute:ColorDefinition">
+        <Transparency>0</Transparency>
+        <Red>255</Red>
+        <Green>255</Green>
+        <Blue>255</Blue>
+      </Background>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+      </Outline>
+      <Insets>
+        <Top>0.0</Top>
+        <Left>2.0</Left>
+        <Bottom>0.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Visible>true</Visible>
+    </Label>
+    <LabelPosition>Below</LabelPosition>
+    <MajorGrid>
+      <LineAttributes>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>196</Red>
+          <Green>196</Green>
+          <Blue>196</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </LineAttributes>
+      <TickStyle>Across</TickStyle>
+      <TickAttributes>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>196</Red>
+          <Green>196</Green>
+          <Blue>196</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </TickAttributes>
+    </MajorGrid>
+    <MinorGrid>
+      <LineAttributes>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>225</Red>
+          <Green>225</Green>
+          <Blue>225</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </LineAttributes>
+      <TickStyle>Across</TickStyle>
+      <TickAttributes>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>225</Red>
+          <Green>225</Green>
+          <Blue>225</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </TickAttributes>
+    </MinorGrid>
+    <Scale>
+      <MinorGridsPerUnit>5</MinorGridsPerUnit>
+    </Scale>
+    <Origin>
+      <Type>Min</Type>
+      <Value xsi:type="data:NumberDataElement">
+        <Value>0.0</Value>
+      </Value>
+    </Origin>
+    <PrimaryAxis>true</PrimaryAxis>
+    <CategoryAxis>true</CategoryAxis>
+    <Percent>false</Percent>
+  </Axes>
+  <Orientation>Vertical</Orientation>
+  <UnitSpacing>50.0</UnitSpacing>
+  <Rotation>
+    <Angles>
+      <XAngle>-20.0</XAngle>
+      <YAngle>45.0</YAngle>
+      <ZAngle>0.0</ZAngle>
+      <Type>None</Type>
+    </Angles>
+  </Rotation>
+</model:ChartWithAxes>
+]]></xml-property>
+                        <property name="outputFormat">SVG</property>
+                        <property name="inheritColumns">false</property>
+                        <property name="height">159pt</property>
+                        <property name="width">424.5pt</property>
+                        <structure name="toc">
+                            <expression name="expressionValue" type="javascript">"Risiko o. zus. M."</expression>
+                        </structure>
+                        <property name="dataSet">risiken</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Datenbank-Id__(Gefährdung)</property>
+                                <text-property name="displayName">Datenbank-Id__(Gefährdung)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Gefährdung)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Identifier__(Gefährdung)</property>
+                                <text-property name="displayName">Identifier__(Gefährdung)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Identifier__(Gefährdung)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__mit__zusätzlichen_Auswirkung</property>
+                                <text-property name="displayName">Risiko__mit__zusätzlichen_Auswirkung</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen_Auswirkung"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__mit__zusätzlichen__Eintrittshäufigkeit</property>
+                                <text-property name="displayName">Risiko__mit__zusätzlichen__Eintrittshäufigkeit</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Eintrittshäufigkeit"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__mit__zusätzlichen__Risiko</property>
+                                <text-property name="displayName">Risiko__mit__zusätzlichen__Risiko</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Risiko"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__ohne__zusätzliche__Auswirkung</property>
+                                <text-property name="displayName">Risiko__ohne__zusätzliche__Auswirkung</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Auswirkung"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__ohne__zusätzliche__Eintrittshäufigkeit</property>
+                                <text-property name="displayName">Risiko__ohne__zusätzliche__Eintrittshäufigkeit</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Eintrittshäufigkeit"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risiko__ohne__zusätzliche__Risiko</property>
+                                <text-property name="displayName">Risiko__ohne__zusätzliche__Risiko</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Risiko"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
+                                <text-property name="displayName">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)</property>
+                                <text-property name="displayName">Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Titel__(Gefährdung)</property>
+                                <text-property name="displayName">Titel__(Gefährdung)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Titel__(Gefährdung)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">color_mit</property>
+                                <text-property name="displayName">color_mit</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["color_mit"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">color_ohne</property>
+                                <text-property name="displayName">color_ohne</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["color_ohne"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">risk_mit</property>
+                                <text-property name="displayName">risk_mit</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["risk_mit"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">risk_ohne</property>
+                                <text-property name="displayName">risk_ohne</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["risk_ohne"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">sortRisikoMitMassnahmen</property>
+                                <expression name="expression" type="javascript">if (row["Risiko__ohne__zusätzliche__Risiko"]=="null"){&#13;
+0}&#13;
+else if (row["Risiko__ohne__zusätzliche__Risiko"]=="gering") {&#13;
+1}&#13;
+else if (row["Risiko__ohne__zusätzliche__Risiko"]=="mittel") {&#13;
+2}&#13;
+else if (row["Risiko__ohne__zusätzliche__Risiko"]=="hoch") {&#13;
+3}&#13;
+else if (row["Risiko__ohne__zusätzliche__Risiko"]=="sehr hoch") {&#13;
+4}&#13;
+else&#13;
+-1;</expression>
+                                <property name="dataType">integer</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                    </extended-item>
+                </cell>
+            </row>
+            <row id="16354">
+                <property name="pageBreakInside">avoid</property>
+                <cell id="16355">
+                    <property name="textAlign">center</property>
+                    <text id="15760">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <structure name="toc">
+                            <expression name="expressionValue" type="javascript">"Risiko-Matrix mit identifizierten Gefährdungen (Brutto-Risiko)"</expression>
+                        </structure>
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[Risiko-Matrix mit identifizierten Brutto-Risiken]]></text-property>
+                    </text>
+                    <text id="16375">
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[Die Risiko-Matrix visualisiert die erkannten Brutto-Risiken entsprechend ihrer Schadensauswirkung und Eintrittshäufigkeit. Die unterschiedlichen Farben repräsentieren dabei die Risikokategorien von niedrig über mittel bis hin zu hoch und sehr hoch.]]></text-property>
+                    </text>
+                    <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="riskMatrix-without-risk"
+ id="15532">
+                        <property name="cube">riskMatrix</property>
+                        <property name="measures">
+                            <extended-item extensionName="MeasureView" id="15533">
+                                <property name="measure">id</property>
+                                <property name="detail">
+                                    <extended-item extensionName="AggregationCell" id="15534">
+                                        <property name="aggregationOnRow">imp/impact_label</property>
+                                        <property name="aggregationOnColumn">freq/freq_label</property>
+                                        <property name="textAlign">center</property>
+                                        <property name="content">
+                                            <data id="15535">
+                                                <method name="onRender"><![CDATA[//Packages.java.lang.System.out.println ("render " + row["color"] );
+
+this.getStyle().backgroundColor = row["color"];
+
+//Packages.java.lang.System.out.println ("render10 " + k1 +" "+ v1);	
+	
+k2 = row['freq_label'] + "-" + row['impact_label']+'-without';
+v2 = reportContext.getPersistentGlobalVariable(k2);
+Packages.java.lang.System.out.println ("render without risk " + k2 +" "+ v2)
+if(v2==null) 
+	v2="0";
+
+
+this.setDisplayValue(v2);
+
+
+]]></method>
+                                                <property name="resultSetColumn">id_imp/impact_label_freq/freq_label</property>
+                                            </data>
+                                        </property>
+                                    </extended-item>
+                                </property>
+                                <property name="aggregations">
+                                    <extended-item extensionName="AggregationCell" id="15536">
+                                        <property name="aggregationOnColumn">freq/freq_label</property>
+                                    </extended-item>
+                                </property>
+                                <property name="header">
+                                    <extended-item extensionName="CrosstabCell" id="15537">
+                                        <property name="content">
+                                            <label id="15538">
+                                                <text-property name="text">id</text-property>
+                                            </label>
+                                        </property>
+                                    </extended-item>
+                                </property>
+                            </extended-item>
+                        </property>
+                        <property name="rows">
+                            <extended-item extensionName="CrosstabView" id="15539">
+                                <property name="grandTotal">
+                                    <extended-item extensionName="CrosstabCell" id="15540"/>
+                                </property>
+                                <property name="views">
+                                    <extended-item extensionName="DimensionView" id="15541">
+                                        <property name="dimension">imp</property>
+                                        <property name="levels">
+                                            <extended-item extensionName="LevelView" name="NewLevel View611" id="15542">
+                                                <property name="level">imp/impact_id</property>
+                                                <property name="sort">
+                                                    <sort-element>
+                                                        <expression name="key" type="javascript">data["impact_id"]</expression>
+                                                        <property name="direction">desc</property>
+                                                        <property name="strength">-1</property>
+                                                    </sort-element>
+                                                </property>
+                                                <property name="member">
+                                                    <extended-item extensionName="CrosstabCell" id="15543">
+                                                        <property name="backgroundColor">#FFFFFF</property>
+                                                        <property name="canShrink">true</property>
+                                                        <property name="width">0%</property>
+                                                    </extended-item>
+                                                </property>
+                                            </extended-item>
+                                            <extended-item extensionName="LevelView" name="NewLevel View711" id="15544">
+                                                <property name="level">imp/impact_label</property>
+                                                <property name="member">
+                                                    <extended-item extensionName="CrosstabCell" id="15545">
+                                                        <property name="content">
+                                                            <data name="impact_label111" id="15546">
+                                                                <property name="fontWeight">bold</property>
+                                                                <property name="resultSetColumn">impact_label</property>
+                                                            </data>
+                                                        </property>
+                                                        <property name="width">20%</property>
+                                                    </extended-item>
+                                                </property>
+                                            </extended-item>
+                                        </property>
+                                    </extended-item>
+                                </property>
+                                <property name="grandTotalLocation">after</property>
+                            </extended-item>
+                        </property>
+                        <property name="columns">
+                            <extended-item extensionName="CrosstabView" id="15547">
+                                <property name="views">
+                                    <extended-item extensionName="DimensionView" id="15548">
+                                        <property name="dimension">freq</property>
+                                        <property name="levels">
+                                            <extended-item extensionName="LevelView" name="NewLevel View511" id="15549">
+                                                <property name="level">freq/freq_id</property>
+                                                <property name="member">
+                                                    <extended-item extensionName="CrosstabCell" id="15550">
+                                                        <property name="borderTopStyle">none</property>
+                                                        <property name="borderLeftStyle">none</property>
+                                                        <property name="borderBottomStyle">none</property>
+                                                        <property name="borderRightStyle">none</property>
+                                                    </extended-item>
+                                                </property>
+                                            </extended-item>
+                                            <extended-item extensionName="LevelView" name="NewLevel View911" id="15551">
+                                                <property name="level">freq/freq_label</property>
+                                                <property name="member">
+                                                    <extended-item extensionName="CrosstabCell" id="15552">
+                                                        <property name="content">
+                                                            <data name="freq_label111" id="15553">
+                                                                <property name="fontWeight">bold</property>
+                                                                <property name="resultSetColumn">freq_label</property>
+                                                            </data>
+                                                        </property>
+                                                    </extended-item>
+                                                </property>
+                                            </extended-item>
+                                        </property>
+                                    </extended-item>
+                                </property>
+                                <property name="grandTotalLocation">after</property>
+                            </extended-item>
+                        </property>
+                        <property name="header">
+                            <extended-item extensionName="CrosstabCell" id="15554">
+                                <property name="borderTopStyle">none</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderRightStyle">none</property>
+                                <property name="canShrink">true</property>
+                            </extended-item>
+                            <extended-item extensionName="CrosstabCell" id="15555">
+                                <property name="borderTopStyle">none</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderRightStyle">none</property>
+                            </extended-item>
+                            <extended-item extensionName="CrosstabCell" id="15556">
+                                <property name="canShrink">true</property>
+                            </extended-item>
+                            <extended-item extensionName="CrosstabCell" id="15557">
+                                <property name="content">
+                                    <label id="15558">
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Eintrittshäufigkeit/</text-property>
+                                    </label>
+                                    <label id="15559">
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Auswirkung</text-property>
+                                    </label>
+                                </property>
+                            </extended-item>
+                        </property>
+                        <property name="hideMeasureHeader">true</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">freq_id</property>
+                                <expression name="expression">dimension["freq"]["freq_id"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">impact_id</property>
+                                <expression name="expression">dimension["imp"]["impact_id"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">impact_label</property>
+                                <expression name="expression">dimension["imp"]["impact_label"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">freq_label</property>
+                                <expression name="expression">dimension["freq"]["freq_label"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">id_imp/impact_label_freq/freq_label</property>
+                                <expression name="expression">measure["id"]</expression>
+                                <property name="dataType">integer</property>
+                                <simple-property-list name="aggregateOn">
+                                    <value>imp/impact_label</value>
+                                    <value>freq/freq_label</value>
+                                </simple-property-list>
+                                <property name="aggregateFunction">SUM</property>
+                            </structure>
+                            <structure>
+                                <property name="name">color</property>
+                                <expression name="expression" type="javascript">measure["color"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">id_freq/freq_label</property>
+                                <expression name="expression">measure["id"]</expression>
+                                <property name="dataType">float</property>
+                                <simple-property-list name="aggregateOn">
+                                    <value>freq/freq_label</value>
+                                </simple-property-list>
+                                <property name="aggregateFunction">SUM</property>
+                            </structure>
+                        </list-property>
+                    </extended-item>
+                </cell>
+            </row>
+        </grid>
+        <grid name="Netto-Risiko" id="16356">
+            <column id="16357"/>
+            <row id="16358">
+                <property name="pageBreakBefore">always</property>
+                <cell id="16359">
                     <label id="15852">
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
@@ -21309,18 +22847,16 @@ In der ersten Tabelle wird die Anzahl der Zielobjekte gezeigt, für die eine Ris
                     </label>
                 </cell>
             </row>
-            <row id="16303">
-                <property name="height">0.7604166666666666in</property>
-                <cell id="16304">
-                    <property name="textAlign">center</property>
-                    <text id="16305">
+            <row id="16360">
+                <cell id="16361">
+                    <text id="16374">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Das folgende Diagramm veranschaulicht die Verteilung der Netto-Risiken (Risiken mit zusätzlichen Maßnahmen).]]></text-property>
+                        <text-property name="content"><![CDATA[Das folgende Diagramm veranschaulicht die Verteilung der Netto-Risiken (Risiken mit zusätzlichen Maßnahmen) und zeigt auf, wie die Risiken mitigiert wurden.]]></text-property>
                     </text>
                 </cell>
             </row>
-            <row id="15689">
-                <cell id="15690">
+            <row id="16362">
+                <cell id="16363">
                     <property name="textAlign">center</property>
                     <extended-item extensionName="Chart" id="15691">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -22612,10 +24148,8 @@ else&#13;
                     </extended-item>
                 </cell>
             </row>
-            <row id="16314">
-                <property name="height">1.5729166666666667in</property>
-                <cell id="16315">
-                    <property name="textAlign">center</property>
+            <row id="16364">
+                <cell id="16365">
                     <text id="12555">
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
@@ -22626,15 +24160,18 @@ else&#13;
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Risiko-Matrix mit identifizierten Risiken]]></text-property>
                     </text>
+                </cell>
+            </row>
+            <row id="16366">
+                <cell id="16367">
                     <text id="16316">
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Die Risiko-Matrix visualisiert die erkannten Netto-Risiken entsprechend ihrer Schadensauswirkung und Eintrittshäufigkeit. Die unterschiedlichen Farben repräsentieren dabei die Risikokategorien von niedrig über mittel bis hin zu hoch und sehr hoch.]]></text-property>
                     </text>
                 </cell>
             </row>
-            <row id="15698">
-                <cell id="15699">
-                    <property name="textAlign">center</property>
+            <row id="16368">
+                <cell id="16369">
                     <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="riskMatrix-with-risk1"
  id="15039">
                         <property name="cube">riskMatrix</property>
@@ -22799,6 +24336,7 @@ this.setDisplayValue(v1);
                             </extended-item>
                         </property>
                         <property name="hideMeasureHeader">true</property>
+                        <property name="pageBreakInside">avoid</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">freq_id</property>
@@ -22848,19 +24386,16 @@ this.setDisplayValue(v1);
                     </extended-item>
                 </cell>
             </row>
-            <row id="16306">
-                <property name="height">0.96875in</property>
-                <cell id="16307">
-                    <property name="textAlign">center</property>
+            <row id="16370">
+                <cell id="16371">
                     <text id="16308">
                         <property name="contentType">auto</property>
                         <text-property name="content"><![CDATA[Sollten nach der Risikobehandlung weiterhin erhebliche Risiken bestehen, werden diese anschließend in einer Tabelle dargestellt. In der dritten Spalte der Tabelle wird das Zielobjekt angezeigt, das mit der jeweiligen Gefährdung verknüpft ist, um eine schnellere Identifizierung der entsprechenden Gefährdung in Ihrem Informationsverbund zu ermöglichen.]]></text-property>
                     </text>
                 </cell>
             </row>
-            <row id="15700">
-                <cell id="15701">
-                    <property name="textAlign">center</property>
+            <row id="16372">
+                <cell id="16373">
                     <table id="15595">
                         <property name="width">7.65625in</property>
                         <property name="dataSet">risiken</property>
@@ -23462,1618 +24997,6 @@ this.getStyle().backgroundColor = rgbColor;]]></method>
                             </row>
                         </footer>
                     </table>
-                </cell>
-            </row>
-            <row id="16346">
-                <property name="height">0.4791666666666667in</property>
-                <cell id="16347">
-                    <property name="textAlign">center</property>
-                    <label id="15755">
-                        <property name="fontSize">14pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="marginTop">10pt</property>
-                        <property name="textAlign">center</property>
-                        <structure name="toc">
-                            <expression name="expressionValue" type="javascript">"Brutto-Risiko"</expression>
-                        </structure>
-                        <text-property name="text">Brutto-Risiko </text-property>
-                    </label>
-                </cell>
-            </row>
-            <row id="16348">
-                <cell id="16349">
-                    <property name="textAlign">center</property>
-                    <text id="16321">
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Im Folgenden werden die Brutto-Risiken (Risiken ohne zusätzliche Maßnahmen) als Vorher/Nachher-Darstellung präsentiert. Auf diese Weise erhalten Sie einen direkten Vergleich zum Netto-Risiko.]]></text-property>
-                    </text>
-                </cell>
-            </row>
-            <row id="16350">
-                <cell id="16351">
-                    <property name="textAlign">center</property>
-                    <extended-item extensionName="Chart" id="15750">
-                        <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.6.1</Version>
-  <Type>Bar Chart</Type>
-  <SubType>Side-by-side</SubType>
-  <Block>
-    <Children xsi:type="layout:TitleBlock">
-      <Bounds>
-        <Left>0.0</Left>
-        <Top>0.0</Top>
-        <Width>0.0</Width>
-        <Height>0.0</Height>
-      </Bounds>
-      <Insets>
-        <Top>3.0</Top>
-        <Left>3.0</Left>
-        <Bottom>3.0</Bottom>
-        <Right>3.0</Right>
-      </Insets>
-      <Row>-1</Row>
-      <Column>-1</Column>
-      <Rowspan>-1</Rowspan>
-      <Columnspan>-1</Columnspan>
-      <Outline>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-        <Visible>false</Visible>
-      </Outline>
-      <Visible>true</Visible>
-      <Label>
-        <Caption>
-          <Value>Anzahl der Risiken ohne zusätzliche Maßnahmen</Value>
-          <Font>
-            <Size>12.0</Size>
-            <Bold>true</Bold>
-            <Alignment>
-              <horizontalAlignment>Center</horizontalAlignment>
-              <verticalAlignment>Center</verticalAlignment>
-            </Alignment>
-          </Font>
-        </Caption>
-        <Background xsi:type="attribute:ColorDefinition">
-          <Transparency>0</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Background>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-        </Outline>
-        <Insets>
-          <Top>0.0</Top>
-          <Left>2.0</Left>
-          <Bottom>0.0</Bottom>
-          <Right>3.0</Right>
-        </Insets>
-        <Visible>true</Visible>
-      </Label>
-    </Children>
-    <Children xsi:type="layout:Plot">
-      <Bounds>
-        <Left>0.0</Left>
-        <Top>0.0</Top>
-        <Width>0.0</Width>
-        <Height>0.0</Height>
-      </Bounds>
-      <Insets>
-        <Top>3.0</Top>
-        <Left>3.0</Left>
-        <Bottom>3.0</Bottom>
-        <Right>3.0</Right>
-      </Insets>
-      <Row>-1</Row>
-      <Column>-1</Column>
-      <Rowspan>-1</Rowspan>
-      <Columnspan>-1</Columnspan>
-      <Outline>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-        <Visible>true</Visible>
-      </Outline>
-      <Visible>true</Visible>
-      <HorizontalSpacing>5</HorizontalSpacing>
-      <VerticalSpacing>5</VerticalSpacing>
-      <ClientArea>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>0</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </Outline>
-        <Insets>
-          <Top>0.0</Top>
-          <Left>0.0</Left>
-          <Bottom>0.0</Bottom>
-          <Right>0.0</Right>
-        </Insets>
-      </ClientArea>
-    </Children>
-    <Children xsi:type="layout:Legend">
-      <Bounds>
-        <Left>0.0</Left>
-        <Top>0.0</Top>
-        <Width>0.0</Width>
-        <Height>0.0</Height>
-      </Bounds>
-      <Insets>
-        <Top>3.0</Top>
-        <Left>3.0</Left>
-        <Bottom>3.0</Bottom>
-        <Right>3.0</Right>
-      </Insets>
-      <Row>-1</Row>
-      <Column>-1</Column>
-      <Rowspan>-1</Rowspan>
-      <Columnspan>-1</Columnspan>
-      <Outline>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-        <Visible>false</Visible>
-      </Outline>
-      <Visible>false</Visible>
-      <ClientArea>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>0</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </Outline>
-        <Insets>
-          <Top>2.0</Top>
-          <Left>2.0</Left>
-          <Bottom>2.0</Bottom>
-          <Right>2.0</Right>
-        </Insets>
-      </ClientArea>
-      <Text>
-        <Value></Value>
-        <Font>
-          <Alignment/>
-        </Font>
-      </Text>
-      <Orientation>Vertical</Orientation>
-      <Direction>Top_Bottom</Direction>
-      <Separator>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-        <Visible>true</Visible>
-      </Separator>
-      <Position>Right</Position>
-      <ItemType>Series</ItemType>
-      <Title>
-        <Caption>
-          <Value></Value>
-          <Font>
-            <Alignment/>
-          </Font>
-        </Caption>
-        <Background xsi:type="attribute:ColorDefinition">
-          <Transparency>0</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Background>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </Outline>
-        <Insets>
-          <Top>0.0</Top>
-          <Left>2.0</Left>
-          <Bottom>0.0</Bottom>
-          <Right>3.0</Right>
-        </Insets>
-        <Visible>false</Visible>
-      </Title>
-      <TitlePosition>Above</TitlePosition>
-    </Children>
-    <Bounds>
-      <Left>0.0</Left>
-      <Top>0.0</Top>
-      <Width>424.5</Width>
-      <Height>159.0</Height>
-    </Bounds>
-    <Insets>
-      <Top>3.0</Top>
-      <Left>3.0</Left>
-      <Bottom>3.0</Bottom>
-      <Right>3.0</Right>
-    </Insets>
-    <Row>-1</Row>
-    <Column>-1</Column>
-    <Rowspan>-1</Rowspan>
-    <Columnspan>-1</Columnspan>
-    <Outline>
-      <Style>Solid</Style>
-      <Thickness>1</Thickness>
-      <Color>
-        <Transparency>255</Transparency>
-        <Red>0</Red>
-        <Green>0</Green>
-        <Blue>0</Blue>
-      </Color>
-      <Visible>false</Visible>
-    </Outline>
-    <Visible>true</Visible>
-  </Block>
-  <Dimension>Two_Dimensional_With_Depth</Dimension>
-  <Script>
-/**
- * Called before drawing each datapoint graphical representation or marker.
- * 
- * @param dph
- *            DataPointHints
- * @param fill
- *            Fill
- * @param icsc
- *            IChartScriptContext
- */
-
-function beforeDrawDataPoint( dph, fill, icsc )
-{
-
-reportContext = icsc.getExternalContext().getObject();
-
-color = reportContext.getPersistentGlobalVariable(&quot;risk_color_&quot;+dph.getBaseValue());
-if(color!=null){
-	fill.setTransparency(255);
-	fill.setRed(color[0]);
-	fill.setGreen(color[1]);
-	fill.setBlue(color[2]);
-}
-
-}
-</Script>
-  <Units>Points</Units>
-  <SeriesThickness>10.0</SeriesThickness>
-  <ExtendedProperties>
-    <Name>enable.area.alt</Name>
-    <Value>false</Value>
-  </ExtendedProperties>
-  <SampleData>
-    <BaseSampleData>
-      <DataSetRepresentation>A, B, C</DataSetRepresentation>
-    </BaseSampleData>
-    <OrthogonalSampleData>
-      <DataSetRepresentation>5,4,12</DataSetRepresentation>
-      <SeriesDefinitionIndex>0</SeriesDefinitionIndex>
-    </OrthogonalSampleData>
-  </SampleData>
-  <Interactivity/>
-  <EmptyMessage>
-    <Caption>
-      <Value>This chart contains no data.</Value>
-      <Font>
-        <Alignment>
-          <horizontalAlignment>Center</horizontalAlignment>
-          <verticalAlignment>Center</verticalAlignment>
-        </Alignment>
-      </Font>
-    </Caption>
-    <Background xsi:type="attribute:ColorDefinition">
-      <Transparency>64</Transparency>
-      <Red>127</Red>
-      <Green>127</Green>
-      <Blue>127</Blue>
-    </Background>
-    <Outline>
-      <Color>
-        <Transparency>128</Transparency>
-        <Red>127</Red>
-        <Green>127</Green>
-        <Blue>127</Blue>
-      </Color>
-      <Visible>true</Visible>
-    </Outline>
-    <Insets>
-      <Top>10.0</Top>
-      <Left>10.0</Left>
-      <Bottom>10.0</Bottom>
-      <Right>10.0</Right>
-    </Insets>
-    <Visible>false</Visible>
-  </EmptyMessage>
-  <Axes>
-    <Type>Text</Type>
-    <Title>
-      <Caption>
-        <Value>X-Axis Title</Value>
-        <Font>
-          <Size>14.0</Size>
-          <Bold>true</Bold>
-          <Alignment>
-            <horizontalAlignment>Center</horizontalAlignment>
-            <verticalAlignment>Center</verticalAlignment>
-          </Alignment>
-        </Font>
-      </Caption>
-      <Background xsi:type="attribute:ColorDefinition">
-        <Transparency>0</Transparency>
-        <Red>255</Red>
-        <Green>255</Green>
-        <Blue>255</Blue>
-      </Background>
-      <Outline>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-      </Outline>
-      <Insets>
-        <Top>0.0</Top>
-        <Left>2.0</Left>
-        <Bottom>0.0</Bottom>
-        <Right>3.0</Right>
-      </Insets>
-      <Visible>false</Visible>
-    </Title>
-    <TitlePosition>Below</TitlePosition>
-    <AssociatedAxes>
-      <Type>Linear</Type>
-      <Title>
-        <Caption>
-          <Value>Y-Axis Title</Value>
-          <Font>
-            <Size>14.0</Size>
-            <Bold>true</Bold>
-            <Alignment>
-              <horizontalAlignment>Center</horizontalAlignment>
-              <verticalAlignment>Center</verticalAlignment>
-            </Alignment>
-          </Font>
-        </Caption>
-        <Background xsi:type="attribute:ColorDefinition">
-          <Transparency>0</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Background>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-        </Outline>
-        <Insets>
-          <Top>0.0</Top>
-          <Left>2.0</Left>
-          <Bottom>0.0</Bottom>
-          <Right>3.0</Right>
-        </Insets>
-        <Visible>false</Visible>
-      </Title>
-      <TitlePosition>Left</TitlePosition>
-      <SeriesDefinitions>
-        <Query>
-          <Definition></Definition>
-          <Grouping>
-            <GroupType>Text</GroupType>
-          </Grouping>
-        </Query>
-        <SeriesPalette>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>166</Green>
-            <Blue>218</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>242</Red>
-            <Green>88</Green>
-            <Blue>106</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>232</Red>
-            <Green>172</Green>
-            <Blue>57</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>255</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>64</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>170</Red>
-            <Green>85</Green>
-            <Blue>85</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>192</Red>
-            <Green>192</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>192</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>7</Red>
-            <Green>146</Green>
-            <Blue>94</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>128</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>128</Green>
-            <Blue>192</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>0</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>64</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>240</Green>
-            <Blue>120</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>64</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>0</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>0</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>64</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>64</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>255</Red>
-            <Green>128</Green>
-            <Blue>0</Blue>
-          </Entries>
-        </SeriesPalette>
-        <Series xsi:type="type:BarSeries">
-          <Visible>true</Visible>
-          <Label>
-            <Caption>
-              <Value></Value>
-              <Font>
-                <Alignment/>
-              </Font>
-            </Caption>
-            <Background xsi:type="attribute:ColorDefinition">
-              <Transparency>0</Transparency>
-              <Red>255</Red>
-              <Green>255</Green>
-              <Blue>255</Blue>
-            </Background>
-            <Outline>
-              <Style>Solid</Style>
-              <Thickness>1</Thickness>
-              <Color>
-                <Transparency>255</Transparency>
-                <Red>0</Red>
-                <Green>0</Green>
-                <Blue>0</Blue>
-              </Color>
-              <Visible>false</Visible>
-            </Outline>
-            <Insets>
-              <Top>0.0</Top>
-              <Left>2.0</Left>
-              <Bottom>0.0</Bottom>
-              <Right>3.0</Right>
-            </Insets>
-            <Visible>true</Visible>
-          </Label>
-          <DataDefinition>
-            <Definition>row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]</Definition>
-            <Grouping>
-              <Enabled>true</Enabled>
-              <GroupType>Text</GroupType>
-              <AggregateExpression>Count</AggregateExpression>
-            </Grouping>
-          </DataDefinition>
-          <SeriesIdentifier>Series 1</SeriesIdentifier>
-          <DataPoint>
-            <Components>
-              <Type>Orthogonal_Value</Type>
-            </Components>
-            <Separator>, </Separator>
-          </DataPoint>
-          <LabelPosition>Outside</LabelPosition>
-          <Stacked>false</Stacked>
-          <Triggers>
-            <Condition>onmouseover</Condition>
-            <Action>
-              <Type>Show_Tooltip</Type>
-              <Value xsi:type="attribute:TooltipValue">
-                <Text></Text>
-                <Delay>200</Delay>
-              </Value>
-            </Action>
-          </Triggers>
-          <Riser>Rectangle</Riser>
-        </Series>
-      </SeriesDefinitions>
-      <Orientation>Vertical</Orientation>
-      <LineAttributes>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-        <Visible>true</Visible>
-      </LineAttributes>
-      <Label>
-        <Caption>
-          <Value></Value>
-          <Font>
-            <Alignment/>
-          </Font>
-        </Caption>
-        <Background xsi:type="attribute:ColorDefinition">
-          <Transparency>0</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Background>
-        <Outline>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
-        </Outline>
-        <Insets>
-          <Top>0.0</Top>
-          <Left>2.0</Left>
-          <Bottom>0.0</Bottom>
-          <Right>3.0</Right>
-        </Insets>
-        <Visible>true</Visible>
-      </Label>
-      <LabelPosition>Left</LabelPosition>
-      <MajorGrid>
-        <LineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>196</Red>
-            <Green>196</Green>
-            <Blue>196</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </LineAttributes>
-        <TickStyle>Across</TickStyle>
-        <TickAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>196</Red>
-            <Green>196</Green>
-            <Blue>196</Blue>
-          </Color>
-          <Visible>true</Visible>
-        </TickAttributes>
-      </MajorGrid>
-      <MinorGrid>
-        <LineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>225</Red>
-            <Green>225</Green>
-            <Blue>225</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </LineAttributes>
-        <TickStyle>Across</TickStyle>
-        <TickAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>225</Red>
-            <Green>225</Green>
-            <Blue>225</Blue>
-          </Color>
-          <Visible>false</Visible>
-        </TickAttributes>
-      </MinorGrid>
-      <Scale>
-        <MinorGridsPerUnit>5</MinorGridsPerUnit>
-      </Scale>
-      <Origin>
-        <Type>Min</Type>
-        <Value xsi:type="data:NumberDataElement">
-          <Value>0.0</Value>
-        </Value>
-      </Origin>
-      <PrimaryAxis>true</PrimaryAxis>
-      <Percent>false</Percent>
-    </AssociatedAxes>
-    <SeriesDefinitions>
-      <Query>
-        <Definition></Definition>
-      </Query>
-      <SeriesPalette>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>80</Red>
-          <Green>166</Green>
-          <Blue>218</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>242</Red>
-          <Green>88</Green>
-          <Blue>106</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>232</Red>
-          <Green>172</Green>
-          <Blue>57</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>255</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>64</Red>
-          <Green>128</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>128</Green>
-          <Blue>192</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>170</Red>
-          <Green>85</Green>
-          <Blue>85</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>128</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>192</Red>
-          <Green>192</Green>
-          <Blue>192</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>192</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>7</Red>
-          <Green>146</Green>
-          <Blue>94</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>128</Green>
-          <Blue>255</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>128</Green>
-          <Blue>192</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>128</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>128</Green>
-          <Blue>192</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>0</Green>
-          <Blue>255</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>64</Green>
-          <Blue>64</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>128</Green>
-          <Blue>64</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>80</Red>
-          <Green>240</Green>
-          <Blue>120</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>64</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>0</Green>
-          <Blue>64</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>0</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>128</Green>
-          <Blue>64</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
-          <Green>128</Green>
-          <Blue>128</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>128</Green>
-          <Blue>255</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>64</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>255</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>128</Green>
-          <Blue>0</Blue>
-        </Entries>
-      </SeriesPalette>
-      <Series>
-        <Visible>true</Visible>
-        <Label>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-            <Visible>false</Visible>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>false</Visible>
-        </Label>
-        <DataDefinition>
-          <Definition>if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;] == &quot;null&quot;) {&#xD;
-&quot;Unbearbeitet&quot;}&#xD;
-else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;gering&quot;) {&#xD;
-&quot;gering&quot;}&#xD;
-else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;mittel&quot;) {&#xD;
-&quot;mittel&quot;}&#xD;
-else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;hoch&quot;) {&#xD;
-&quot;hoch&quot;}&#xD;
-else if (row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;]==&quot;sehr hoch&quot;) {&#xD;
-&quot;sehr hoch&quot;}&#xD;
-else&#xD;
-row[&quot;Risiko__ohne__zusätzliche__Risiko&quot;];</Definition>
-        </DataDefinition>
-        <SeriesIdentifier></SeriesIdentifier>
-        <DataPoint>
-          <Components>
-            <Type>Orthogonal_Value</Type>
-          </Components>
-          <Separator>, </Separator>
-        </DataPoint>
-        <LabelPosition>Outside</LabelPosition>
-        <Stacked>false</Stacked>
-      </Series>
-      <Grouping>
-        <Enabled>true</Enabled>
-        <GroupType>Text</GroupType>
-        <AggregateExpression>Sum</AggregateExpression>
-      </Grouping>
-      <Sorting>Ascending</Sorting>
-      <SortKey>
-        <Definition>row[&quot;sortRisikoMitMassnahmen&quot;]</Definition>
-      </SortKey>
-      <SortStrength>0</SortStrength>
-    </SeriesDefinitions>
-    <Orientation>Horizontal</Orientation>
-    <LineAttributes>
-      <Style>Solid</Style>
-      <Thickness>1</Thickness>
-      <Color>
-        <Transparency>255</Transparency>
-        <Red>0</Red>
-        <Green>0</Green>
-        <Blue>0</Blue>
-      </Color>
-      <Visible>true</Visible>
-    </LineAttributes>
-    <Label>
-      <Caption>
-        <Value></Value>
-        <Font>
-          <Alignment/>
-        </Font>
-      </Caption>
-      <Background xsi:type="attribute:ColorDefinition">
-        <Transparency>0</Transparency>
-        <Red>255</Red>
-        <Green>255</Green>
-        <Blue>255</Blue>
-      </Background>
-      <Outline>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Color>
-      </Outline>
-      <Insets>
-        <Top>0.0</Top>
-        <Left>2.0</Left>
-        <Bottom>0.0</Bottom>
-        <Right>3.0</Right>
-      </Insets>
-      <Visible>true</Visible>
-    </Label>
-    <LabelPosition>Below</LabelPosition>
-    <MajorGrid>
-      <LineAttributes>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>196</Red>
-          <Green>196</Green>
-          <Blue>196</Blue>
-        </Color>
-        <Visible>false</Visible>
-      </LineAttributes>
-      <TickStyle>Across</TickStyle>
-      <TickAttributes>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>196</Red>
-          <Green>196</Green>
-          <Blue>196</Blue>
-        </Color>
-        <Visible>true</Visible>
-      </TickAttributes>
-    </MajorGrid>
-    <MinorGrid>
-      <LineAttributes>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>225</Red>
-          <Green>225</Green>
-          <Blue>225</Blue>
-        </Color>
-        <Visible>false</Visible>
-      </LineAttributes>
-      <TickStyle>Across</TickStyle>
-      <TickAttributes>
-        <Style>Solid</Style>
-        <Thickness>1</Thickness>
-        <Color>
-          <Transparency>255</Transparency>
-          <Red>225</Red>
-          <Green>225</Green>
-          <Blue>225</Blue>
-        </Color>
-        <Visible>false</Visible>
-      </TickAttributes>
-    </MinorGrid>
-    <Scale>
-      <MinorGridsPerUnit>5</MinorGridsPerUnit>
-    </Scale>
-    <Origin>
-      <Type>Min</Type>
-      <Value xsi:type="data:NumberDataElement">
-        <Value>0.0</Value>
-      </Value>
-    </Origin>
-    <PrimaryAxis>true</PrimaryAxis>
-    <CategoryAxis>true</CategoryAxis>
-    <Percent>false</Percent>
-  </Axes>
-  <Orientation>Vertical</Orientation>
-  <UnitSpacing>50.0</UnitSpacing>
-  <Rotation>
-    <Angles>
-      <XAngle>-20.0</XAngle>
-      <YAngle>45.0</YAngle>
-      <ZAngle>0.0</ZAngle>
-      <Type>None</Type>
-    </Angles>
-  </Rotation>
-</model:ChartWithAxes>
-]]></xml-property>
-                        <property name="outputFormat">SVG</property>
-                        <property name="inheritColumns">false</property>
-                        <property name="height">159pt</property>
-                        <property name="width">424.5pt</property>
-                        <structure name="toc">
-                            <expression name="expressionValue" type="javascript">"Risiko o. zus. M."</expression>
-                        </structure>
-                        <property name="dataSet">risiken</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">Datenbank-Id__(Gefährdung)</property>
-                                <text-property name="displayName">Datenbank-Id__(Gefährdung)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Gefährdung)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Identifier__(Gefährdung)</property>
-                                <text-property name="displayName">Identifier__(Gefährdung)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Identifier__(Gefährdung)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__mit__zusätzlichen_Auswirkung</property>
-                                <text-property name="displayName">Risiko__mit__zusätzlichen_Auswirkung</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen_Auswirkung"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__mit__zusätzlichen__Eintrittshäufigkeit</property>
-                                <text-property name="displayName">Risiko__mit__zusätzlichen__Eintrittshäufigkeit</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Eintrittshäufigkeit"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__mit__zusätzlichen__Risiko</property>
-                                <text-property name="displayName">Risiko__mit__zusätzlichen__Risiko</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__mit__zusätzlichen__Risiko"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__ohne__zusätzliche__Auswirkung</property>
-                                <text-property name="displayName">Risiko__ohne__zusätzliche__Auswirkung</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Auswirkung"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__ohne__zusätzliche__Eintrittshäufigkeit</property>
-                                <text-property name="displayName">Risiko__ohne__zusätzliche__Eintrittshäufigkeit</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Eintrittshäufigkeit"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risiko__ohne__zusätzliche__Risiko</property>
-                                <text-property name="displayName">Risiko__ohne__zusätzliche__Risiko</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risiko__ohne__zusätzliche__Risiko"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</property>
-                                <text-property name="displayName">Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risikobehandlungsoption__-__Erläuterung__zur__Risikobehandlung__(Gefährdung)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)</property>
-                                <text-property name="displayName">Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Risikobehandlungsoption__-__Risikobehandlung__(Gefährdung)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">Titel__(Gefährdung)</property>
-                                <text-property name="displayName">Titel__(Gefährdung)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Titel__(Gefährdung)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">color_mit</property>
-                                <text-property name="displayName">color_mit</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["color_mit"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">color_ohne</property>
-                                <text-property name="displayName">color_ohne</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["color_ohne"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">risk_mit</property>
-                                <text-property name="displayName">risk_mit</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["risk_mit"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">risk_ohne</property>
-                                <text-property name="displayName">risk_ohne</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["risk_ohne"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">sortRisikoMitMassnahmen</property>
-                                <expression name="expression" type="javascript">if (row["Risiko__ohne__zusätzliche__Risiko"]=="null"){&#13;
-0}&#13;
-else if (row["Risiko__ohne__zusätzliche__Risiko"]=="gering") {&#13;
-1}&#13;
-else if (row["Risiko__ohne__zusätzliche__Risiko"]=="mittel") {&#13;
-2}&#13;
-else if (row["Risiko__ohne__zusätzliche__Risiko"]=="hoch") {&#13;
-3}&#13;
-else if (row["Risiko__ohne__zusätzliche__Risiko"]=="sehr hoch") {&#13;
-4}&#13;
-else&#13;
--1;</expression>
-                                <property name="dataType">integer</property>
-                                <property name="allowExport">true</property>
-                            </structure>
-                        </list-property>
-                    </extended-item>
-                </cell>
-            </row>
-            <row id="16352">
-                <cell id="16353">
-                    <property name="textAlign">center</property>
-                    <text id="15760">
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">center</property>
-                        <structure name="toc">
-                            <expression name="expressionValue" type="javascript">"Risiko-Matrix mit identifizierten Gefährdungen (Brutto-Risiko)"</expression>
-                        </structure>
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Risiko-Matrix mit identifizierten Risiken
-]]></text-property>
-                    </text>
-                </cell>
-            </row>
-            <row id="16354">
-                <cell id="16355">
-                    <property name="textAlign">center</property>
-                    <extended-item extensionName="Crosstab" extensionVersion="3.7.0" name="riskMatrix-without-risk"
- id="15532">
-                        <property name="cube">riskMatrix</property>
-                        <property name="measures">
-                            <extended-item extensionName="MeasureView" id="15533">
-                                <property name="measure">id</property>
-                                <property name="detail">
-                                    <extended-item extensionName="AggregationCell" id="15534">
-                                        <property name="aggregationOnRow">imp/impact_label</property>
-                                        <property name="aggregationOnColumn">freq/freq_label</property>
-                                        <property name="textAlign">center</property>
-                                        <property name="content">
-                                            <data id="15535">
-                                                <method name="onRender"><![CDATA[//Packages.java.lang.System.out.println ("render " + row["color"] );
-
-this.getStyle().backgroundColor = row["color"];
-
-//Packages.java.lang.System.out.println ("render10 " + k1 +" "+ v1);	
-	
-k2 = row['freq_label'] + "-" + row['impact_label']+'-without';
-v2 = reportContext.getPersistentGlobalVariable(k2);
-Packages.java.lang.System.out.println ("render without risk " + k2 +" "+ v2)
-if(v2==null) 
-	v2="0";
-
-
-this.setDisplayValue(v2);
-
-
-]]></method>
-                                                <property name="resultSetColumn">id_imp/impact_label_freq/freq_label</property>
-                                            </data>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                                <property name="aggregations">
-                                    <extended-item extensionName="AggregationCell" id="15536">
-                                        <property name="aggregationOnColumn">freq/freq_label</property>
-                                    </extended-item>
-                                </property>
-                                <property name="header">
-                                    <extended-item extensionName="CrosstabCell" id="15537">
-                                        <property name="content">
-                                            <label id="15538">
-                                                <text-property name="text">id</text-property>
-                                            </label>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                            </extended-item>
-                        </property>
-                        <property name="rows">
-                            <extended-item extensionName="CrosstabView" id="15539">
-                                <property name="grandTotal">
-                                    <extended-item extensionName="CrosstabCell" id="15540"/>
-                                </property>
-                                <property name="views">
-                                    <extended-item extensionName="DimensionView" id="15541">
-                                        <property name="dimension">imp</property>
-                                        <property name="levels">
-                                            <extended-item extensionName="LevelView" name="NewLevel View611" id="15542">
-                                                <property name="level">imp/impact_id</property>
-                                                <property name="sort">
-                                                    <sort-element>
-                                                        <expression name="key" type="javascript">data["impact_id"]</expression>
-                                                        <property name="direction">desc</property>
-                                                        <property name="strength">-1</property>
-                                                    </sort-element>
-                                                </property>
-                                                <property name="member">
-                                                    <extended-item extensionName="CrosstabCell" id="15543">
-                                                        <property name="backgroundColor">#FFFFFF</property>
-                                                        <property name="canShrink">true</property>
-                                                        <property name="width">0%</property>
-                                                    </extended-item>
-                                                </property>
-                                            </extended-item>
-                                            <extended-item extensionName="LevelView" name="NewLevel View711" id="15544">
-                                                <property name="level">imp/impact_label</property>
-                                                <property name="member">
-                                                    <extended-item extensionName="CrosstabCell" id="15545">
-                                                        <property name="content">
-                                                            <data name="impact_label111" id="15546">
-                                                                <property name="fontWeight">bold</property>
-                                                                <property name="resultSetColumn">impact_label</property>
-                                                            </data>
-                                                        </property>
-                                                        <property name="width">20%</property>
-                                                    </extended-item>
-                                                </property>
-                                            </extended-item>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                                <property name="grandTotalLocation">after</property>
-                            </extended-item>
-                        </property>
-                        <property name="columns">
-                            <extended-item extensionName="CrosstabView" id="15547">
-                                <property name="views">
-                                    <extended-item extensionName="DimensionView" id="15548">
-                                        <property name="dimension">freq</property>
-                                        <property name="levels">
-                                            <extended-item extensionName="LevelView" name="NewLevel View511" id="15549">
-                                                <property name="level">freq/freq_id</property>
-                                                <property name="member">
-                                                    <extended-item extensionName="CrosstabCell" id="15550">
-                                                        <property name="borderTopStyle">none</property>
-                                                        <property name="borderLeftStyle">none</property>
-                                                        <property name="borderBottomStyle">none</property>
-                                                        <property name="borderRightStyle">none</property>
-                                                    </extended-item>
-                                                </property>
-                                            </extended-item>
-                                            <extended-item extensionName="LevelView" name="NewLevel View911" id="15551">
-                                                <property name="level">freq/freq_label</property>
-                                                <property name="member">
-                                                    <extended-item extensionName="CrosstabCell" id="15552">
-                                                        <property name="content">
-                                                            <data name="freq_label111" id="15553">
-                                                                <property name="fontWeight">bold</property>
-                                                                <property name="resultSetColumn">freq_label</property>
-                                                            </data>
-                                                        </property>
-                                                    </extended-item>
-                                                </property>
-                                            </extended-item>
-                                        </property>
-                                    </extended-item>
-                                </property>
-                                <property name="grandTotalLocation">after</property>
-                            </extended-item>
-                        </property>
-                        <property name="header">
-                            <extended-item extensionName="CrosstabCell" id="15554">
-                                <property name="borderTopStyle">none</property>
-                                <property name="borderLeftStyle">none</property>
-                                <property name="borderBottomStyle">none</property>
-                                <property name="borderRightStyle">none</property>
-                                <property name="canShrink">true</property>
-                            </extended-item>
-                            <extended-item extensionName="CrosstabCell" id="15555">
-                                <property name="borderTopStyle">none</property>
-                                <property name="borderLeftStyle">none</property>
-                                <property name="borderBottomStyle">none</property>
-                                <property name="borderRightStyle">none</property>
-                            </extended-item>
-                            <extended-item extensionName="CrosstabCell" id="15556">
-                                <property name="canShrink">true</property>
-                            </extended-item>
-                            <extended-item extensionName="CrosstabCell" id="15557">
-                                <property name="content">
-                                    <label id="15558">
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Eintrittshäufigkeit/</text-property>
-                                    </label>
-                                    <label id="15559">
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Auswirkung</text-property>
-                                    </label>
-                                </property>
-                            </extended-item>
-                        </property>
-                        <property name="hideMeasureHeader">true</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">freq_id</property>
-                                <expression name="expression">dimension["freq"]["freq_id"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">impact_id</property>
-                                <expression name="expression">dimension["imp"]["impact_id"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">impact_label</property>
-                                <expression name="expression">dimension["imp"]["impact_label"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">freq_label</property>
-                                <expression name="expression">dimension["freq"]["freq_label"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">id_imp/impact_label_freq/freq_label</property>
-                                <expression name="expression">measure["id"]</expression>
-                                <property name="dataType">integer</property>
-                                <simple-property-list name="aggregateOn">
-                                    <value>imp/impact_label</value>
-                                    <value>freq/freq_label</value>
-                                </simple-property-list>
-                                <property name="aggregateFunction">SUM</property>
-                            </structure>
-                            <structure>
-                                <property name="name">color</property>
-                                <expression name="expression" type="javascript">measure["color"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">id_freq/freq_label</property>
-                                <expression name="expression">measure["id"]</expression>
-                                <property name="dataType">float</property>
-                                <simple-property-list name="aggregateOn">
-                                    <value>freq/freq_label</value>
-                                </simple-property-list>
-                                <property name="aggregateFunction">SUM</property>
-                            </structure>
-                        </list-property>
-                    </extended-item>
-                </cell>
-            </row>
-        </grid>
-        <grid name="anhang" id="12578">
-            <property name="pageBreakBefore">always</property>
-            <property name="height">15.614583333333334in</property>
-            <property name="width">7.739583333333333in</property>
-            <property name="dataSet">ITNetwork_LTR</property>
-            <list-property name="visibility">
-                <structure>
-                    <property name="format">all</property>
-                    <expression name="valueExpr" type="javascript">row["Vorgehensweise__der__Absicherung__(Informationsverbund)"]=="BASIS"</expression>
-                </structure>
-            </list-property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">Geltungsbereich__(Informationsverbund)</property>
-                    <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Geltungsbereich__(Informationsverbund)"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
-                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Vorgehensweise__der__Absicherung__(Informationsverbund)"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <structure name="toc"/>
-            <column id="12579">
-                <property name="width">0.8020833333333334in</property>
-            </column>
-            <column id="12580">
-                <property name="width">5.447916666666667in</property>
-            </column>
-            <column id="12581">
-                <property name="width">1.4895833333333333in</property>
-            </column>
-            <row id="15751">
-                <property name="pageBreakBefore">avoid</property>
-                <property name="height">0.4166666666666667in</property>
-                <cell id="15752">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
-                    <property name="textAlign">center</property>
-                </cell>
-            </row>
-            <row id="16317">
-                <property name="pageBreakBefore">avoid</property>
-                <property name="height">0.875in</property>
-                <cell id="16318">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
-                    <property name="textAlign">center</property>
-                </cell>
-            </row>
-            <row id="15745">
-                <property name="pageBreakBefore">avoid</property>
-                <cell id="15746">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
-                    <property name="textAlign">center</property>
-                </cell>
-            </row>
-            <row id="15756">
-                <property name="pageBreakBefore">avoid</property>
-                <property name="height">0.5520833333333334in</property>
-                <cell id="15757">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
-                </cell>
-            </row>
-            <row id="15528">
-                <property name="pageBreakBefore">avoid</property>
-                <cell id="15529">
-                    <property name="colSpan">3</property>
-                    <property name="rowSpan">1</property>
                 </cell>
             </row>
         </grid>
