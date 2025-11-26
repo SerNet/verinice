@@ -103,8 +103,6 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
         <unit id="apache.feature.group" version="0.8.0"/>
         <unit id="apache.source.feature.group" version="0.8.0"/>
-        <unit id="com.mchange.c3p0.feature.group" version="0.9.5.4"/>
-        <unit id="com.mchange.c3p0.source.feature.group" version="0.9.5.4"/>
         <unit id="jfree.feature.group" version="1.0.0"/>
         <unit id="jfree.source.feature.group" version="1.0.0"/>
         <unit id="pax.feature.group" version="0.6.0"/>
@@ -114,7 +112,7 @@
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
         <unit id="antlr.feature.group" version="0.0.0"/>
-        <repository location="https://bob-2023.int.sernet.de/updatesites/verinice-deps-20251201094630/"/>
+        <repository location="https://bob-2023.int.sernet.de/updatesites/verinice-deps-20251201145328/"/>
     </location>
 
 
@@ -216,6 +214,20 @@
 				<groupId>commons-httpclient</groupId>
 				<artifactId>commons-httpclient</artifactId>
 				<version>3.1</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</location>
+	<location includeDependencyDepth="direct" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+
+		<feature id="c3p0" version="1.0.0.qualifier">
+
+</feature>
+		<dependencies>
+			<dependency>
+				<groupId>com.mchange</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>0.11.2</version>
 				<type>jar</type>
 			</dependency>
 		</dependencies>
