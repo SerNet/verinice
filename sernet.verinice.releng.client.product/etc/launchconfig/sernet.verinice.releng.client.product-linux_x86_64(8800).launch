@@ -81,7 +81,6 @@
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.jws@default:default"/>
         <setEntry value="javax.servlet-api@default:default"/>
-        <setEntry value="javax.xml.rpc@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jfree.jcommon@default:default"/>
         <setEntry value="jfree.jfreechart-swt@default:default"/>
@@ -111,7 +110,6 @@
         <setEntry value="org.apache.commons.commons-compress@default:default"/>
         <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.commons-text@default:default"/>
-        <setEntry value="org.apache.commons.httpclient@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.jxpath@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
@@ -555,6 +553,7 @@
         <setEntry value="org.tukaani.xz@default:default"/>
         <setEntry value="org.verinicepatches@default:default"/>
         <setEntry value="uk.co.spudsoft.birt.emitters.excel@default:default"/>
+        <setEntry value="wrapped.commons-httpclient.commons-httpclient@default:default"/>
         <setEntry value="wrapped.javax.xml.ws.jaxws-api@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
