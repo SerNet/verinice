@@ -156,6 +156,7 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
             // Since the result of a change to permissions is that the model is
             // reloaded completely we only mark that one object has changed (
             // otherwise there would be a reload for each changed object.)
+            cte.getChildren().clear();
             changedElements.add(cte);
         } catch (CommandException e) {
             throw new RuntimeCommandException("Error updating permissions", e); //$NON-NLS-1$
