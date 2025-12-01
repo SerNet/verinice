@@ -26,7 +26,7 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.25",
  sernet.gs.service,
  org.eclipse.ui.net,
  sernet.hui.common;bundle-version="1.1.1",
- com.springsource.net.sf.ehcache;bundle-version="1.6.0",
+ wrapped.net.sf.ehcache.ehcache;bundle-version="1.6.0",
  antlr;bundle-version="2.7.7",
  org.springframework.osgi.extender;bundle-version="1.2.0"
 Import-Package: org.apache.derby.shared.common.error;resolution:=optional,

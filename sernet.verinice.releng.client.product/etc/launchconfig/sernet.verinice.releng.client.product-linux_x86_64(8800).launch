@@ -53,7 +53,6 @@
         <setEntry value="com.springsource.javax.wsdl@default:default"/>
         <setEntry value="com.springsource.javax.xml.soap@default:default"/>
         <setEntry value="com.springsource.net.sf.cglib@default:default"/>
-        <setEntry value="com.springsource.net.sf.ehcache@default:default"/>
         <setEntry value="com.springsource.org.aopalliance@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.discovery@default:default"/>
         <setEntry value="com.springsource.org.apache.commons.lang@default:default"/>
@@ -85,7 +84,6 @@
         <setEntry value="jfree.jcommon@default:default"/>
         <setEntry value="jfree.jfreechart-swt@default:default"/>
         <setEntry value="jfree.jfreechart@default:default"/>
-        <setEntry value="net.sf.ehcache@default:default"/>
         <setEntry value="org.apache.batik.anim@default:default"/>
         <setEntry value="org.apache.batik.awt.util@default:default"/>
         <setEntry value="org.apache.batik.bridge@default:default"/>
@@ -555,6 +553,7 @@
         <setEntry value="uk.co.spudsoft.birt.emitters.excel@default:default"/>
         <setEntry value="wrapped.commons-httpclient.commons-httpclient@default:default"/>
         <setEntry value="wrapped.javax.xml.ws.jaxws-api@default:default"/>
+        <setEntry value="wrapped.net.sf.ehcache.ehcache@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="jbpm@default:default"/>
