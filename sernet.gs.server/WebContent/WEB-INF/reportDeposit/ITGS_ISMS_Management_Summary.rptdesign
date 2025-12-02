@@ -12010,6 +12010,7 @@ Vertraulichkeit (C), Integrität (I), Verfügbarkeit (A) </text-property>
         <Visible>false</Visible>
       </Title>
       <TitlePosition>Above</TitlePosition>
+      <ShowValue>false</ShowValue>
       <MaxPercent>0.2</MaxPercent>
       <TitlePercent>0.3</TitlePercent>
     </Children>
@@ -12480,18 +12481,7 @@ row[&quot;schutzbedarfVertrulichkeitSortiert&quot;];</Definition>
         </Series>
         <Sorting>Ascending</Sorting>
         <SortKey>
-          <Definition>if (row[&quot;schutzbedarfVertrulichkeitSortiert&quot;] ==&quot;0 Unbearbeitet&quot;) {&#xD;
-&quot;Unbearbeitet&quot;}&#xD;
-else if (row[&quot;schutzbedarfVertrulichkeitSortiert&quot;] ==&quot;1 Unkritisch&quot;){&#xD;
-&quot;Unkritisch&quot;}&#xD;
-else if (row[&quot;schutzbedarfVertrulichkeitSortiert&quot;] ==&quot;2 Normal&quot;){&#xD;
-&quot;Normal&quot;}&#xD;
-else if (row[&quot;schutzbedarfVertrulichkeitSortiert&quot;] ==&quot;3 Hoch&quot;){&#xD;
-&quot;Hoch&quot;}&#xD;
-else if (row[&quot;schutzbedarfVertrulichkeitSortiert&quot;] ==&quot;4 Sehr hoch&quot;){&#xD;
-&quot;Sehr hoch&quot;}&#xD;
-else&#xD;
-row[&quot;schutzbedarfVertrulichkeitSortiert&quot;];</Definition>
+          <Definition>row[&quot;schutzbedarfVertrulichkeitSortiert&quot;];</Definition>
         </SortKey>
       </SeriesDefinitions>
       <Orientation>Vertical</Orientation>
@@ -13826,18 +13816,7 @@ row[&quot;IntegritaetLabelSortiert&quot;];</Definition>
         </Series>
         <Sorting>Ascending</Sorting>
         <SortKey>
-          <Definition>if (row[&quot;IntegritaetLabelSortiert&quot;] ==&quot;0 Unbearbeitet&quot;) {&#xD;
-&quot;Unbearbeitet&quot;}&#xD;
-else if (row[&quot;IntegritaetLabelSortiert&quot;] ==&quot;1 Unkritisch&quot;){&#xD;
-&quot;Unkritisch&quot;}&#xD;
-else if (row[&quot;IntegritaetLabelSortiert&quot;] ==&quot;2 Normal&quot;){&#xD;
-&quot;Normal&quot;}&#xD;
-else if (row[&quot;IntegritaetLabelSortiert&quot;] ==&quot;3 Hoch&quot;){&#xD;
-&quot;Hoch&quot;}&#xD;
-else if (row[&quot;IntegritaetLabelSortiert&quot;] ==&quot;4 Sehr hoch&quot;){&#xD;
-&quot;Sehr hoch&quot;}&#xD;
-else&#xD;
-row[&quot;IntegritaetLabelSortiert&quot;];</Definition>
+          <Definition>row[&quot;IntegritaetLabelSortiert&quot;];</Definition>
         </SortKey>
       </SeriesDefinitions>
       <Orientation>Vertical</Orientation>
@@ -15172,6 +15151,10 @@ row[&quot;VerfuebarkeitLabelSortiert&quot;];</Definition>
           </Triggers>
           <Riser>Rectangle</Riser>
         </Series>
+        <Sorting>Ascending</Sorting>
+        <SortKey>
+          <Definition>row[&quot;VerfuebarkeitLabelSortiert&quot;]</Definition>
+        </SortKey>
       </SeriesDefinitions>
       <Orientation>Vertical</Orientation>
       <LineAttributes>
