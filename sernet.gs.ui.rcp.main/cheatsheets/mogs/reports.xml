@@ -2,22 +2,39 @@
 <cheatsheet title="Berichterstellung">
     <intro>
         <description><b>Willkommen bei verinice.</b><br/><br/>
-      Mit verinice können Sie alle nötigen Referenzdokumente (A.1 bis A.7) erzeugen, die benötigt
+      Mit verinice können Sie alle nötigen Referenzdokumente erzeugen, die benötigt
       werden. Die Dokumente können in den Formaten PDF, HTML, Microsoft Office oder OpenOffice/LibreOffice
       erzeugt werden.
     </description>
     </intro>
     <item title="Ausgabe der Referenzdokumente">
         <description>
-        Rufen Sie über das Menü <b>Datei &gt; Report erzeugen</b> … auf. Alternativ kann in der
-        oberen Leiste der Button Bericht (<b>Report erzeugen…</b>) oder über einen <b>Informationsverbund
-        &gt; rechte Maustaste &gt; Kontextmenü &gt; Erzeuge Report …</b> ausgewählt werden. Wählen
-        Sie nun im Feld „Report auswählen“ eines der Referenzdokumente vom BSI aus. Wählen Sie
-        anschließend den Geltungsbereich (Ihren Informationsverbund), das Ausgabeformat und den
-        Ablageort für die Ausgabedatei aus. Mit Klick auf <b>OK</b> starten Sie die Berichtserzeugung. Der
-        Bericht wird erzeugt, was üblicherweise je nach Größe der Datenbank einige Sekunden bis
-        mehrere Minuten dauern kann. Nachdem der Bericht vollständig erzeugt wurde, können Sie
-        diesen an dem Ablageort einsehen.
+        Rufen Sie über das Menü <b>Datei &gt; Report erzeugen ...</b> auf. Alternativ kann in der oberen Leiste der
+        Button Bericht (<b>Report erzeugen...</b>) oder über einen <b>Informationsverbund &gt; rechte Maustaste &gt;
+        Kontextmenü &gt; Erzeuge Report ...</b> ausgewählt werden.<br/><br/>
+        
+        Der Dialog für die Reporterzeugung wurde optimiert und bietet damit eine kontextbezogene Auswahl der Bericht
+        an. D.h. wenn Sie einen <b>Report auswählen</b>, so werden ab sofort nur die <b>Geltungsbereiche</b> angezeigt,
+        die für diesen Report auch Inhalte liefern. Und andersherum: Wenn Sie als erstes einen Geltungsbereich
+        ausgewählt haben, so stehen nur die Reports zur Auswahl, die Inhalte liefern. Darüber hinaus können mehrere
+        Berichte (für einen Informationsverbund) auf einmal selektiert werden. Erzeugt und ausgegeben werden diese
+        nacheinander. Wurde eine falsche Auswahl getätigt, so gibt es die Möglichkeit alle bisher getätigten
+        Auswahlmöglichkeiten zurückzusetzen. Nachdem die Auswahl mit OK bestätigt wird, kann der gewünschte
+        Speicherort ausgewählt werden.<br/><br/>
+        
+        Des Weiteren können Berichte über mehrere Verbünde erzeugt werden, indem im Modell-View alle gewünschten
+        Verbünde gleichzeitig selektiert werden und über das Kontextmenü der Erzeuge Report... Dialog gestartet wird.
+        Nun werden im Geltungsbereich die ausgewählten Verbünde angezeigt und die Auswahl des Reports kann vorgenommen
+        werden.<br/><br/>
+        
+        Bitte beachten Sie, dass der ausgewählte Report diese Funktion unterstützen muss. Derzeit unterstützen die
+        Standardberichte diese Funktion nicht. Sie können jedoch über die <b>Report-Abfrage</b> und/oder den
+        <b>v.Designer</b> eigene Berichte erstellen.<br/><br/>
+        
+        Ab verinice Version 1.25 ist es möglich die Reports zu klassifizieren. Dabei wird die zuvor eingestellte
+        Klassifizierung im Report auf jeder Seite in der Kopfzeile ausgegeben. Standardmäßig sind vier Stufen
+        vordefiniert, diese können aber den Anforderungen entsprechend unter <b>Bearbeiten &gt; Einstellungen &gt;
+        Reports</b> angepasst und erweitert werden.
      </description>
     </item>
     <item title="Verwendung des Abfrageassistenten">
