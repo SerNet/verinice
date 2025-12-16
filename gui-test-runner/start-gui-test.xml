@@ -240,7 +240,7 @@ catalina.home : ${tomcat-dir}
 catalina.base : ${server-work-dir}
 	</echo>
 	
-    <java classname="org.apache.catalina.startup.Bootstrap" fork="true" spawn="true">
+    <java classname="org.apache.catalina.startup.Bootstrap" fork="true" spawn="true" jvm="${java17.home}/bin/java">
     	<classpath path="${tomcat-classpath}" />
         <jvmarg value="-Dcatalina.home=${tomcat-dir}" />
         <jvmarg value="-Dcatalina.base=${server-work-dir}" />
@@ -544,6 +544,7 @@ ${verinice-workspace}
 ${verinice.jre}/jre/${java-library-location}
 -vmargs
 --add-opens=java.base/java.lang=ALL-UNNAMED
+-Djava.security.manager=allow
 -Xms512m
 -Xmx2048m
 -Dorg.osgi.service.http.port=${verinice.server.port}
