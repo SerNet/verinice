@@ -117,12 +117,18 @@ public class DescriptionPage extends WizardPage {
             for (int i = 0; i < fD.length; i++) {
                 fD[i].setStyle(SWT.BOLD);
             }
-            Font newFont = new Font(getShell().getDisplay(),fD);
-            object.setFont(newFont);
+            Font newFont = new Font(getShell().getDisplay(), fD);
             GC gc = new GC(object);
-            Point size = gc.textExtent(elementTitle);
-            if(size.x > PAGE_WIDTH - pageWidthSubtrahend) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,PAGE_WIDTH-pageWidthSubtrahend) + "..."; //$NON-NLS-1$
+            try {
+                object.setFont(newFont);
+                Point size = gc.textExtent(elementTitle);
+                if (size.x > PAGE_WIDTH - pageWidthSubtrahend) {
+                    elementTitle = trimTitleByWidthSize(gc, elementTitle,
+                            PAGE_WIDTH - pageWidthSubtrahend) + "..."; //$NON-NLS-1$
+                }
+            } finally {
+                newFont.dispose();
+                gc.dispose();
             }
             object.setText(elementTitle);
         }

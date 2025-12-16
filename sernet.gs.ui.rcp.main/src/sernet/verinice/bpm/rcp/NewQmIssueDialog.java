@@ -99,12 +99,19 @@ public class NewQmIssueDialog extends TitleAreaDialog {
             for (int i = 0; i < fD.length; i++) {
                 fD[i].setStyle(SWT.BOLD);
             }
-            Font newFont = new Font(getShell().getDisplay(),fD);
-            object.setFont(newFont);
+            Font newFont = new Font(getShell().getDisplay(), fD);
+
             GC gc = new GC(object);
-            Point size = gc.textExtent(elementTitle);
-            if(size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,DIALOG_WIDTH-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+            try {
+                object.setFont(newFont);
+                Point size = gc.textExtent(elementTitle);
+                if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
+                    elementTitle = trimTitleByWidthSize(gc, elementTitle,
+                            DIALOG_WIDTH - dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+                }
+            } finally {
+                gc.dispose();
+                newFont.dispose();
             }
             object.setText(elementTitle);
         }

@@ -88,12 +88,18 @@ public class DescriptionDialog extends TitleAreaDialog {
             for (int i = 0; i < fD.length; i++) {
                 fD[i].setStyle(SWT.BOLD);
             }
-            Font newFont = new Font(getShell().getDisplay(),fD);
-            titleLabel.setFont(newFont);
+            Font newFont = new Font(getShell().getDisplay(), fD);
             GC gc = new GC(titleLabel);
-            Point size = gc.textExtent(title);
-            if(size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
-                title = trimTitleByWidthSize(gc,title,DIALOG_WIDTH-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+            try {
+                titleLabel.setFont(newFont);
+                Point size = gc.textExtent(title);
+                if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
+                    title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend)
+                            + "..."; //$NON-NLS-1$
+                }
+            } finally {
+                gc.dispose();
+                newFont.dispose();
             }
             titleLabel.setText(title);
         }

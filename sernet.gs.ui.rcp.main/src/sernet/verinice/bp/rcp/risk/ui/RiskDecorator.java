@@ -155,18 +155,21 @@ public class RiskDecorator extends LabelProvider implements ILightweightLabelDec
             int size = baseSize * zoom / 100;
             Image image = new Image(Display.getDefault(), size, size);
             GC gc = new GC(image);
-            gc.setForeground(SWTResourceManager.getColor(BLACK));
-            gc.setBackground(SWTResourceManager.getColor(rgb));
-            int[] xAndYValues = new int[] { 0, 0, size, 0, size, size };
-            gc.drawPolygon(xAndYValues);
-            gc.fillPolygon(xAndYValues);
-            gc.dispose();
-            ImageData imageData = image.getImageData();
-            int whitePixel = imageData.palette.getPixel(WHITE);
-            imageData.transparentPixel = whitePixel;
-            image.dispose();
+            try {
+                gc.setForeground(SWTResourceManager.getColor(BLACK));
+                gc.setBackground(SWTResourceManager.getColor(rgb));
+                int[] xAndYValues = new int[] { 0, 0, size, 0, size, size };
+                gc.drawPolygon(xAndYValues);
+                gc.fillPolygon(xAndYValues);
+                ImageData imageData = image.getImageData();
+                int whitePixel = imageData.palette.getPixel(WHITE);
+                imageData.transparentPixel = whitePixel;
 
-            return imageData;
+                return imageData;
+            } finally {
+                image.dispose();
+                gc.dispose();
+            }
         });
     }
 

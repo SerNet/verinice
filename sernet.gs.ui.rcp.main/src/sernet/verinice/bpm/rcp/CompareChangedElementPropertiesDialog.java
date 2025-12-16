@@ -191,12 +191,17 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
                 fD[i].setStyle(SWT.BOLD);
             }
             Font newFont = new Font(getShell().getDisplay(), fD);
-            titleLabel.setFont(newFont);
             GC gc = new GC(titleLabel);
-            Point size = gc.textExtent(title);
-            if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
-                title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend)
-                        + "..."; //$NON-NLS-1$
+            try {
+                titleLabel.setFont(newFont);
+                Point size = gc.textExtent(title);
+                if (size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
+                    title = trimTitleByWidthSize(gc, title, DIALOG_WIDTH - dialogWidthSubtrahend)
+                            + "..."; //$NON-NLS-1$
+                }
+            } finally {
+                gc.dispose();
+                newFont.dispose();
             }
             titleLabel.setText(title);
         }
