@@ -16,17 +16,18 @@
 <unit id="bcprov" version="0.0.0" />
 <unit id="bcpg" version="0.0.0"/>
 <unit id="jakarta.inject.jakarta.inject-api" version="0.0.0"/>
-<repository location="https://download.eclipse.org/eclipse/updates/4.34/"/>
+<repository location="https://download.eclipse.org/eclipse/updates/4.36/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.zest.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.zest.sdk.feature.group" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
+<unit id="org.apache.commons.commons-logging" version="0.0.0"/>
 <unit id="org.apache.xalan" version="0.0.0"/>
 <unit id="com.google.gson" version="0.0.0"/>
 <unit id="javax.jws" version="0.0.0"/>
-<repository location="https://download.eclipse.org/releases/2024-12/"/>
+<repository location="https://download.eclipse.org/releases/2025-06/"/>
 </location>
 
 
@@ -83,7 +84,6 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
     <unit id="javax.jws" version="0.0.0"/>
     <unit id="javax.xml.bind" version="0.0.0"/>
-    <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
 <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20211122181901/repository/"/>
 </location>
 
