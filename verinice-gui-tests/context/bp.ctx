@@ -5,8 +5,8 @@ Element-Name: bp
 Element-Type: context
 Element-Version: 2.0
 Id: _4GRncI0bEei2UKUDmonytQ
-Runtime-Version: 2.5.1.M3
-Save-Time: 9/23/20, 1:08 PM
+Runtime-Version: 2.5.5.202409072058
+Save-Time: 12/17/25, 12:09 PM
 Tags: bp
 
 ------=_.ecl.context-718f04b4-ed39-33e3-af62-0995e4561998
@@ -150,6 +150,7 @@ proc "verify-link-type" [val path] [val index] [val value] [val linktype] {
 	*/
 	get-editor [get-last $path] |	get-table | get-item -path $linktype -column "Verknü" +
 		"pfung" -index $index | get-property  "values['Titel']" -raw | eq $value | assert-true [concat  "Verknüpfung mit namen: " $value " in der link Tabelle nicht gefunden." ]
+	get-editor [get-last $path] | close	
 }
 
 /* Imports a vna file in the bp view. */
