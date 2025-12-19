@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">Urs Zeidler</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.12.0.v202211281949</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.13.0.v202303021806</property>
     <text-property name="title">verinice - BSI IT-Grundschutz A.4 Grundschutz-Check</text-property>
     <simple-property-list name="includeResource">
         <value>bp-A4-securitycheck</value>
@@ -1247,6 +1247,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="prozess_anforderung_Bausteine" id="12685">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -1494,6 +1507,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
+                        <property name="dataType">string</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -1642,12 +1660,14 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <property name="position">21</property>
                     <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                     <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">22</property>
                     <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
                     <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
@@ -2346,6 +2366,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="itnetwork_anforderung-baustein" id="13152">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -2591,6 +2624,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -3216,6 +3254,20 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="application-anforderung-baustein" id="13366">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -3461,6 +3513,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -4086,6 +4143,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="itsystem-anforderung-baustein" id="13580">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -4331,6 +4401,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -4956,6 +5031,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="icssystem-anforderung-baustein" id="13794">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -5201,6 +5289,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -5826,6 +5919,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="device-anforderung-baustein" id="14008">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -6073,6 +6179,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
+                        <property name="dataType">string</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -6221,12 +6332,14 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <property name="position">21</property>
                     <property name="name">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
                     <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">22</property>
                     <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
                     <property name="nativeName">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                    <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
@@ -6694,6 +6807,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="network-anforderung-baustein" id="14222">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -6939,6 +7065,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -7564,6 +7695,19 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="room-anforderung-baustein" id="14436">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <expression name="expression">var last = "";
+var d = row["Identifier-Mnhm"].split(".",5);
+
+if(d.length>0){
+  last = d[d.length-1];
+ }
+ last;</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Datenbank-Id-obj</property>
@@ -7809,6 +7953,11 @@ row["Nachname__(Person)"]+', '+row["Vorname__(Person)"]
                     <structure>
                         <property name="position">22</property>
                         <property name="name">Umsetzung_-_Umsetzung_bis_(Maßnahme)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">sortmassnahme</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -9067,16 +9216,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -9278,6 +9418,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                     <text-property name="displayName">Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)</text-property>
                     <expression name="expression" type="javascript">dataSetRow["Umsetzung_-_Umsetzung_bis_(Baustein-Anforderung)"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <structure name="toc">
@@ -9988,6 +10140,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="13279">
                         <list-property name="visibility">
@@ -10424,16 +10588,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -10645,6 +10800,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"].lenght</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -11385,6 +11552,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="12802">
                         <list-property name="visibility">
@@ -11809,16 +11988,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12030,6 +12200,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -12770,6 +12952,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="13493">
                         <list-property name="visibility">
@@ -13212,16 +13406,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -13433,6 +13618,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -14173,6 +14370,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="13707">
                         <list-property name="visibility">
@@ -14615,16 +14824,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -14836,6 +15036,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -15576,6 +15788,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="13921">
                         <list-property name="visibility">
@@ -16018,16 +16242,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -16239,6 +16454,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -16979,6 +17206,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="14135">
                         <list-property name="visibility">
@@ -17421,16 +17660,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -17642,6 +17872,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -18382,6 +18624,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="14349">
                         <list-property name="visibility">
@@ -18824,16 +19078,7 @@ else {
                 </structure>
                 <structure>
                     <property name="name">sortKeyMaßnahme</property>
-                    <expression name="expression" type="javascript">if (BirtStr.charLength(row["Identifier-Mnhm"] > 2)) {
-	var str = BirtStr.right(row["Identifier-Mnhm"], 2)
-	if (isNaN(str)) {
-		"0" + BirtStr.right(str, 1)
-	} else {
-		str
-	}
-} else {
-	"0"
-}</expression>
+                    <expression name="expression" type="javascript">row["sortmassnahme"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -19051,6 +19296,18 @@ row["Identifier-Bausteine"].substring(row["Identifier-Bausteine"].lastIndexOf(".
                 <structure>
                     <property name="name">sort1</property>
                     <expression name="expression" type="javascript">SplitSort1(row["Kürzel-obj"])</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sortmassnahme</property>
+                    <text-property name="displayName">sortmassnahme</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sortmassnahme"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secondMaßnahmeSort</property>
+                    <expression name="expression" type="javascript">row["sortmassnahme"].length</expression>
                     <property name="dataType">integer</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -19791,6 +20048,18 @@ else {&#13;
                 <property name="hideDetail">false</property>
                 <property name="pageBreakBefore">avoid</property>
                 <property name="pageBreakInside">avoid</property>
+                <list-property name="sort">
+                    <structure>
+                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                    <structure>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
+                        <property name="direction">asc</property>
+                        <property name="strength">-1</property>
+                    </structure>
+                </list-property>
                 <header>
                     <row id="14563">
                         <list-property name="visibility">
