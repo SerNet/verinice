@@ -56,10 +56,10 @@ platform {
         }
 	}
 
-	feature(id: 'spring', name: 'spring', version: '0.12.0') {
+	feature(id: 'spring', name: 'spring', version: '0.13.0') {
 		plugin fileTree("${project.projectDir}/spring/") {
    			include '**/*.jar'
-   			exclude '**/*sources.jar'
+   			exclude '**/*-sources*.jar'
             exclude 'spring-web-2.5.6.SEC03'
             exclude 'spring-webmvc-2.5.6.SEC03'
             exclude 'spring-core-verinice-patch.jar'
