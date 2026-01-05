@@ -186,7 +186,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         }
 
         CnALink newCnaLink = null;
-        if (changeLinkDirection(cnaLink, linkTypeId)) {
+        if (changeLinkDirection(cnaLink, linkTypeId, linkTypeName)) {
             CreateLink<CnATreeElement, CnATreeElement> createLinkCommand = new CreateLink<>(
                     cnaLink.getDependency(), cnaLink.getDependant(), linkTypeId);
             try {
@@ -229,17 +229,13 @@ public class RelationTypeEditingSupport extends EditingSupport {
         }
     }
 
-    private boolean changeLinkDirection(CnALink link, String linkTypeId) {
-        String sourceTypeId = link.getDependency().getEntityType().getId();
-        String targetTypeId = link.getDependant().getEntityType().getId();
-        Set<HuiRelation> huiRelations = huiTypeFactory.getPossibleRelations(sourceTypeId,
-                targetTypeId);
-        for (HuiRelation huiRelation : huiRelations) {
-            if (huiRelation.getId().equals(linkTypeId)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean changeLinkDirection(CnALink link, String linkTypeId, String linkTypeName) {
+        HuiRelation huiRelation = huiTypeFactory.getRelation(linkTypeId);
+
+        boolean selectionIsDownward = huiRelation.getName().equals(linkTypeName);
+        boolean currentLinkIsDownward = CnALink.isDownwardLink(view.getInputElmt(), link);
+
+        return selectionIsDownward != currentLinkIsDownward;
     }
 
     private String getLinkTypeIdForName(CnALink link, String linkTypeName) {
