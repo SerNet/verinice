@@ -107,12 +107,12 @@
         <unit id="jfree.source.feature.group" version="1.0.0"/>
         <unit id="pax.feature.group" version="0.6.0"/>
         <unit id="pax.source.feature.group" version="0.6.0"/>
-        <unit id="spring.feature.group" version="0.13.0"/>
-        <unit id="spring.source.feature.group" version="0.13.0"/>
+        <unit id="spring.feature.group" version="0.14.0"/>
+        <unit id="spring.source.feature.group" version="0.14.0"/>
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
         <unit id="antlr.feature.group" version="0.0.0"/>
-        <repository location="https://bob-2023.int.sernet.de/updatesites/verinice-deps-20260102135432/"/>
+        <repository location="https://bob-2023.int.sernet.de/updatesites/verinice-deps-20260106155120/"/>
     </location>
 
 

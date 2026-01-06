@@ -134,5 +134,11 @@
 			<version>1.2.2.redhat-00005</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.4</version>
+		    <scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
