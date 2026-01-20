@@ -435,7 +435,7 @@ Require-Bundle: org.springframework.beans;bundle-version="2.5.6.SEC03",
  jakarta.annotation-api;bundle-version="1.2.0",
  jakarta.activation;bundle-version="1.2.2",
  javax.jws;bundle-version="2.0.0",
- bcprov;bundle-version="1.72.0",
+ bcprov;bundle-version="1.79.0",
  com.springsource.javax.mail;bundle-version="1.4.1"
 Import-Package: com.google.gson;version="2.6.2",
  javax.annotation,
