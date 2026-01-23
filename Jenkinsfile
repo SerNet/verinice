@@ -10,7 +10,7 @@ pipeline {
     environment {
         // In case the build server exports a custom JAVA_HOME, we fix the JAVA_HOME
         // to the one used by the docker image.
-        JAVA_HOME='/usr/lib/jvm/java-17-openjdk'
+        JAVA_HOME='/usr/lib/jvm/java-21-openjdk'
     }
     parameters {
         booleanParam(name: 'runIntegrationTests', defaultValue: true, description: 'Run integration tests')

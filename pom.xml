@@ -114,8 +114,8 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-					<executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
-                    <executionEnvironmentDefault>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironmentDefault>
+					<executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-21</executionEnvironment>
+                    <executionEnvironmentDefault>org.eclipse.justj.openjdk.hotspot.jre.full-21</executionEnvironmentDefault>
 				</configuration>
 			</plugin>
 			<plugin>
