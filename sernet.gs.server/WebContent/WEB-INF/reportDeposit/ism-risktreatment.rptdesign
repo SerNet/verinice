@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.13.0.v202303021806</property>
     <text-property name="title">verinice - Information Risk Treatment</text-property>
     <simple-property-list name="includeResource">
         <value>ism-risktreatment</value>
     </simple-property-list>
     <property name="units">in</property>
+    <method name="onPrepare"><![CDATA[var c_correction = parseInt(reportContext.getMessage("confidentiality_correction_value"));
+if(isNaN(c_correction)){
+	c_correction = 2;
+}
+reportContext.setGlobalVariable("c_correction", c_correction);
+
+var i_correction = parseInt(reportContext.getMessage("integrity_correction_value"));
+if(isNaN(i_correction)){
+	i_correction = 2;
+}
+reportContext.setGlobalVariable("i_correction", i_correction);
+
+var a_correction = parseInt(reportContext.getMessage("availability_correction_value"));
+if(isNaN(a_correction)){
+	a_correction = 2;
+}
+reportContext.setGlobalVariable("a_correction", a_correction);
+]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -31,10 +49,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8801/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8801</property>
-        </oda-data-source>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44"/>
         <script-data-source name="scriptedSource" id="7115"/>
     </data-sources>
     <data-sets>
@@ -48,17 +63,17 @@
                 </structure>
                 <structure>
                     <property name="name">numYellowFields_I</property>
-                    <expression name="expression">4</expression>
+                    <expression name="expression">parseInt(reportContext.getGlobalVariable( "i_correction"))+1</expression>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">numYellowFields_A</property>
-                    <expression name="expression">3</expression>
+                    <expression name="expression">parseInt(reportContext.getGlobalVariable( "a_correction"))+1</expression>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">numYellowFields_C</property>
-                    <expression name="expression">3</expression>
+                    <expression name="expression">parseInt(reportContext.getGlobalVariable( "c_correction"))+1</expression>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
@@ -186,6 +201,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
+  "followLinksOutsideOfScope": false,
   "useAllScopes": false,
   "scopeIds": [],
   "columnPaths": [
