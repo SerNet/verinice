@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.13.0.v202303021806</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.14.0.v202312020807</property>
     <text-property name="title">verinice - Information Risk Treatment</text-property>
     <simple-property-list name="includeResource">
         <value>ism-risktreatment</value>
@@ -24,6 +24,10 @@ if(isNaN(a_correction)){
 	a_correction = 2;
 }
 reportContext.setGlobalVariable("a_correction", a_correction);
+
+var showOnlyRedRisk = reportContext.getMessage("filter_only_red_risk");
+reportContext.setGlobalVariable("only_red_risks", showOnlyRedRisk);
+
 ]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -14177,6 +14181,16 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                     <expression name="key" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Titel__(Control)"]</expression>
                     <property name="direction">asc</property>
                     <property name="strength">-1</property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">is-true</property>
+                    <expression name="expr" type="javascript">( (parseInt(row["risk-value-c-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_c") ) ||
+(parseInt(row["risk-value-i-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_i") ) ||
+(parseInt(row["risk-value-a-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_a") ) )
+|| reportContext.getGlobalVariable("only_red_risks") != "1"</expression>
+                    <property name="updateAggregation">true</property>
                 </structure>
             </list-property>
             <column id="3495">
