@@ -14186,10 +14186,10 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
             <list-property name="filter">
                 <structure>
                     <property name="operator">is-true</property>
-                    <expression name="expr" type="javascript">( (parseInt(row["risk-value-c-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_c") ) ||
+                    <expression name="expr" type="javascript">(parseInt(row["risk-value-c-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_c") ) ||
 (parseInt(row["risk-value-i-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_i") ) ||
-(parseInt(row["risk-value-a-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_a") ) )
-|| reportContext.getGlobalVariable("only_red_risks") != "1"</expression>
+(parseInt(row["risk-value-a-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_a") ) ||
+reportContext.getGlobalVariable("only_red_risks") != "1"</expression>
                     <property name="updateAggregation">true</property>
                 </structure>
             </list-property>
