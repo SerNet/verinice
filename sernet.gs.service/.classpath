@@ -9,7 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-ant.jar" sourcepath="sernet.gs.servicesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-dom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-dom4j.jar" sourcepath="sernet.gs.servicesrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-jdom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-s9api.jar" sourcepath="sernet.gs.servicesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-sql.jar" sourcepath="sernet.gs.servicesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-xom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
