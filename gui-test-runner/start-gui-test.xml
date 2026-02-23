@@ -509,9 +509,7 @@ workspace
          ================================= -->
 	<target name="start.verinice.client" depends="configure.verinice" description="start a verinice instance">
 		<echo>Start verinice: ${verince.program} on ${os.name}</echo>
-		<exec executable="${verince.program}" dir="${verinice-aut-path}" spawn="true" vmlauncher="false">
-			<env key="WEBVIEW2_USER_DATA_FOLDER" value="${runner-project-path}" />
-		</exec>
+		<exec executable="${verince.program}" dir="${verinice-aut-path}" spawn="true" vmlauncher="false"/>
 		<echo>wait for verinice ...</echo>
 		<waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
 			<http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
@@ -625,7 +623,6 @@ ${verinice.jre}/jre/${java-library-location}
 		</echo>
 
 		<java jar="${runner-path}/plugins/${erunner}" fork="true">
-			<env key="WEBVIEW2_USER_DATA_FOLDER" value="${runner-project-path}" />
 			<arg value="-application" />
 			<arg value="org.eclipse.rcptt.runner.headless" />
 
