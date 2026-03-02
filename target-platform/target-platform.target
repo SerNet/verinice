@@ -112,7 +112,7 @@
         <unit id="verinicepatches.feature.group" version="1.0.0"/>
         <unit id="verinicepatches.source.feature.group" version="1.0.0"/>
         <unit id="antlr.feature.group" version="0.0.0"/>
-        <repository location="https://bob-2023.int.sernet.de/updatesites/verinice-deps-20260220095325/"/>
+        <repository location="https://update.verinice.org/pub/verinice/updatesites/verinice-deps-20260220095325/"/>
     </location>
 
 
