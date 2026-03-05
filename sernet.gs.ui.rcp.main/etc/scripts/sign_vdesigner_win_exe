@@ -6,23 +6,18 @@ DESCRIPTION="SerNet Service Network GmbH"
 URL="https://www.sernet.de/en/"
 FILE_TO_SIGN=v.Designer/vDesigner.exe
 CMD=/usr/bin/osslsigncode
-# 2023-12-18 - DM - Beim Signieren der 1.27.0 gabe es einen 
-# 404 Fehler beim laden der URL http://timestamp.sectigo.com/
-# Aus diesem Grund habe ich die neue TIMESTAMPURL
-# http://timestamp.comodoca.com/authenticode eingetragen
-#TIMESTAMPURL=http://timestamp.sectigo.com/
-TIMESTAMPURL=http://timestamp.comodoca.com/authenticode
+TIMESTAMPURL=http://timestamp.sectigo.com/
 
 
 # usage
 usage() {
 cat <<EOF >&2
-usage: sign_win_exe -k PATH_TO_PKCS_FILE -i PATH_TO_VERINICE_ZIP 
+usage: sign_win_exe -c PATH_TO_CERT_FILE -i PATH_TO_VERINICE_ZIP 
        sign_win_exe -h Show this help
 
 Example:
        
-       sign_win_exe -k /mount/usb-drive/pkcs12-file.pfx -i verinice-win.zip
+       sign_win_exe -c /tmp/sernet.cert -i verinice-win.zip
 
 Signs the windows execuable in a given zip. Ask for the key password, 
 
@@ -31,10 +26,10 @@ exit 1
 }
 
 # parse arguments
-while getopts k:i:h opt
+while getopts c:i:h opt
 do
     case $opt in
-    k) PATH_TO_KEY="$OPTARG";;
+    c) PATH_TO_CERT="$OPTARG";;
     i) ZIP_FILE="$OPTARG";;
     h) usage;;
     esac
@@ -43,7 +38,7 @@ shift $(($OPTIND - 1))
 
 set -o errexit
 
-KT="${PATH_TO_KEY:?Path to key is manatory.}"
+KT="${PATH_TO_CERT:?Path to cert is manatory.}"
 IT="${ZIP_FILE:?Zip file is mantatory.}"
 
 #unzip in tmp
@@ -55,21 +50,23 @@ unzip -qq -o $ZIP_FILE -d $TMP_DIR
 
 ## sign the exe
 IN_FILE=$TMP_DIR/$FILE_TO_SIGN
-OUT=$(mktemp)
+OUT=$(mktemp -u)
 
 echo "
 Sign: $IN_FILE -> $OUT
-PKCS 12 file: $PATH_TO_KEY
+Certificate file: $PATH_TO_CERT
 Description: $DESCRIPTION 
 Url: $URL"
 
 # the sign command
-$CMD sign -pkcs12 "$PATH_TO_KEY" \
+$CMD sign -certs "$PATH_TO_CERT" \
   -askpass \
-  -h sha256 \
+  -pkcs11engine /usr/lib/x86_64-linux-gnu/engines-3/libpkcs11.so \
+  -pkcs11module /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so \
   -n "$DESCRIPTION" \
   -i "$URL" \
   -t $TIMESTAMPURL \
+  -h sha256 \
   -in $IN_FILE \
   -out $OUT
   
