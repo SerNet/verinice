@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.24" id="1">
     <property name="author">Urs Zeidler</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 4.13.0.v202303021806</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.14.0.v202312020807</property>
     <text-property name="title">verinice - BSI IT-Grundschutz A.4 Grundschutz-Check</text-property>
     <simple-property-list name="includeResource">
         <value>bp-A4-securitycheck</value>
@@ -12959,7 +12959,7 @@ else {&#13;
                         <property name="strength">-1</property>
                     </structure>
                     <structure>
-                        <expression name="key" type="javascript">row["secondMaßnahmeSort"]</expression>
+                        <expression name="key" type="javascript">row["sortmassnahme"]</expression>
                         <property name="direction">asc</property>
                         <property name="strength">-1</property>
                     </structure>
