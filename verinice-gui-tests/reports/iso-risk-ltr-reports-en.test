@@ -86,6 +86,7 @@ get-window "ISO/IEC 27005 Risk Analysis" | get-button OK | click
 
 gen-rep-ism "(S) ISM-ISO: Risk Assessment" "en-Verinice_Risk_Catalogue"
 gen-rep-ism "(S) ISM-ISO: Risk Treatment" "en-Verinice_Risk_Catalogue"
+gen-rep-ism "(S) ISM-ISO: Risk Treatment-only red" "en-Verinice_Risk_Catalogue"
 
 get-view "Information Security Model" | get-tree 
     | select $selectedObject | get-menu 

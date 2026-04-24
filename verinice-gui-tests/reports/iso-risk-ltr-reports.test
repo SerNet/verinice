@@ -52,6 +52,7 @@ get-window "ISO/IEC 27005 Risikoanalyse" | get-button OK | click
 
 gen-rep "(S) ISM-ISO: Risikobeurteilung" "Verinice_Risk_Catalogue"
 gen-rep "(S) ISM-ISO: Risikobehandlung" "Verinice_Risk_Catalogue"
+gen-rep "(S) ISM-ISO: Risikobehandlung-nur-rote-risiken" "Verinice_Risk_Catalogue"
 
 measure-delete "Verinice_Risk_Catalogue" $selectedObject
 

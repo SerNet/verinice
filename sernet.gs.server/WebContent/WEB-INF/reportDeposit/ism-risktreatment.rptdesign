@@ -24,10 +24,6 @@ if(isNaN(a_correction)){
 	a_correction = 2;
 }
 reportContext.setGlobalVariable("a_correction", a_correction);
-
-var showOnlyRedRisk = reportContext.getMessage("filter_only_red_risk");
-reportContext.setGlobalVariable("only_red_risks", showOnlyRedRisk);
-
 ]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -354,14 +350,14 @@ counterI = 0;
 
 dim_max_a = parseInt(reportContext.getMessage("risk_a_dim"));
 if(isNaN(dim_max_a)){
-	dim_max_a = 5;
+    dim_max_a = 5;
 }
 ]]></method>
             <method name="fetch"><![CDATA[if(counter<dim_max_a){
-	row["prop"] = counter;
-	row["prop"] = counter;
-	counter++;
-	return true;
+    row["prop"] = counter;
+    row["prop"] = counter;
+    counter++;
+    return true;
 } else return false;]]></method>
             <method name="close"><![CDATA[counter = null;
 counterI = null;]]></method>
@@ -407,14 +403,14 @@ counterI = 0;
 
 dim_max_c = parseInt(reportContext.getMessage("risk_c_dim"));
 if(isNaN(dim_max_c)){
-	dim_max_c = 4;
+    dim_max_c = 4;
 }
 ]]></method>
             <method name="fetch"><![CDATA[if(counter<dim_max_c){
-	row["prop"] = counter;
-	row["prop"] = counter;
-	counter++;
-	return true;
+    row["prop"] = counter;
+    row["prop"] = counter;
+    counter++;
+    return true;
 } else return false;]]></method>
             <method name="close"><![CDATA[counter = null;
 counterI = null;]]></method>
@@ -460,14 +456,14 @@ counterI = 0;
 
 dim_max_i = parseInt(reportContext.getMessage("risk_i_dim"));
 if(isNaN(dim_max_i)){
-	dim_max_i = 3;
+    dim_max_i = 3;
 }
 ]]></method>
             <method name="fetch"><![CDATA[if(counter<dim_max_i){
-	row["prop"] = counter;
-	row["prop"] = counter;
-	counter++;
-	return true;
+    row["prop"] = counter;
+    row["prop"] = counter;
+    counter++;
+    return true;
 } else return false;]]></method>
             <method name="close"><![CDATA[counter = null;
 counterI = null;]]></method>
@@ -14181,16 +14177,6 @@ parseInt(data["cube_base::additinal_propabilities::prop"])
                     <expression name="key" type="javascript">row["asset_id-scenarios-with-controlls-and-vulnerabilities::asset_id-scenarios-with-controlls::Titel__(Control)"]</expression>
                     <property name="direction">asc</property>
                     <property name="strength">-1</property>
-                </structure>
-            </list-property>
-            <list-property name="filter">
-                <structure>
-                    <property name="operator">is-true</property>
-                    <expression name="expr" type="javascript">(parseInt(row["risk-value-c-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_c") ) ||
-(parseInt(row["risk-value-i-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_i") ) ||
-(parseInt(row["risk-value-a-with-controls_(Szenario)"])>reportContext.getGlobalVariable("accepted_a") ) ||
-reportContext.getGlobalVariable("only_red_risks") != "1"</expression>
-                    <property name="updateAggregation">true</property>
                 </structure>
             </list-property>
             <column id="3495">
