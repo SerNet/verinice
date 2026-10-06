@@ -1,7 +1,7 @@
 # rcptt testing for verinice
 
 This ant build executes the rcptt tests for verinice.  
-It takes a verince.zip and executes the tests.  
+It takes a verinice.zip and executes the tests.  
 
 most of the configuration properties are placed in the 'gui-test.properties' file.
 

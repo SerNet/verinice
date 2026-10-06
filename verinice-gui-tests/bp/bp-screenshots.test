@@ -31,7 +31,7 @@ screen-shot-catalog-view "catalog-view.png"
 // bp view
 screen-shot-bp-view "modernisierter-it-grundschutz-view.png"
 
-//application toolbar verince
+//application toolbar verinice
 get-button Notizen | get-object | invoke getParent | invoke getParent | save-screenshot [concat $imagedir
 	"/application-toolbar.png"]
 //application toolbar complete

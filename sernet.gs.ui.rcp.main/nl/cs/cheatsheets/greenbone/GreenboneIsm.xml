@@ -139,7 +139,7 @@
 	  se provádí na pravidelně, budou zranitelnosti, které nebyly opraveny, znovu zjištěny a budou vytvořeny odpovídající úkoly. 
 	  Proto je celý proces zaměřen na optimalizaci bezpečnosti při udržení pracnosti na co nejnižší úrovni.<br />
       <br />
-      Greenbone skenu zranitenosti může být automaticky nastaven an přenos nalezených zranitelností do <b>verince.PRO</b>
+      Greenbone skenu zranitenosti může být automaticky nastaven an přenos nalezených zranitelností do <b>verinice.PRO</b>
       V tom případě <b>verinice.PRO</b> porovná aktuální výsledky skenu se stavem implentace podle pracovního postupu 
       a provede nezbytné úpravy. Zranitelnosti které byly nesprávně nastaveny na  <b>napraveno</b> budou znovu otevřeny
 	  - <b>verinice.PRO</b> znovuvytvoří správné vazby nezi aktivy a scénáři. recreates the correct links between assets and

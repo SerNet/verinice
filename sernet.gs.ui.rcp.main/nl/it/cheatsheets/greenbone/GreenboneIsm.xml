@@ -138,7 +138,7 @@
       i compiti corrispondenti saranno creati secondo. Pertanto l'intero processo mira ad ottimizzare la sicurezza mentre
       mantenendo lo sforzo quanto pi? basso possibile. <br />
       <br />
-      La scansione di vulnerabilit? di Greenbone pu? essere configurata per trasferire le vulnerabilit? rilevate a <b> verince.PRO </b>
+      La scansione di vulnerabilit? di Greenbone pu? essere configurata per trasferire le vulnerabilit? rilevate a <b> verinice.PRO </b>
       automaticamente. In questo caso <b> verinice.PRO </b> confronta il risultato di scansione corrente con lo stato di implementazione
       in base al flusso di lavoro e effettua le regolazioni necessarie. Vulnerabilit? che sono state impostate
       <b> recitificato </b> verr? riaperto - <b> verinice.PRO </b> ricrea i collegamenti corretti tra le attivit? e

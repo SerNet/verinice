@@ -41,23 +41,23 @@ pipeline {
             parallel {
                 stage('Run UI tests on Linux') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)', 'linux-verince-client-log'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Linux', artifactFilterRcptt, "${outputDir}/gui-test-linux", 'GUI Test Report (Linux)', 'linux-verinice-client-log'
                     }
                 }
                 stage('Run UI tests on macOS Current') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS current', artifactFilterRcptt, "${outputDir}/gui-test-mac-current", 'GUI Test Report (macOS)', 'macc-verince-client-log'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'macOS current', artifactFilterRcptt, "${outputDir}/gui-test-mac-current", 'GUI Test Report (macOS)', 'macc-verinice-client-log'
                     }
                 }
                 stage('Run UI tests on Windows') {
                     steps {
-                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)', 'win-verince-client-log'
+                        runRCPTT 'rcptt-client-test', branchName, jobName, productsBuild.number, 'Windows 10', artifactFilterRcptt, "${outputDir}/gui-test-windows", 'GUI Test Report (Windows 10)', 'win-verinice-client-log'
                     }
                 }
                 stage('Run 3-tier UI tests') {
                     steps {
-                        runRCPTT 'rcptt-server-test', branchName, jobName,  productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)', '3-tier-verince-client-log'
-                        recordLogMessages '3-tier-verince-server-log', "${outputDir}/gui-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
+                        runRCPTT 'rcptt-server-test', branchName, jobName,  productsBuild.number, null, artifactFilterRcptt, "${outputDir}/gui-test-3-tier", 'GUI Test Report (3-tier)', '3-tier-verinice-client-log'
+                        recordLogMessages '3-tier-verinice-server-log', "${outputDir}/gui-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
                     }
                 }
                 stage('Run reporting tests') {
@@ -77,7 +77,7 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-standalone"
-                            runRCPTT 'rcptt-client-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)', 'performance-verince-client-log'
+                            runRCPTT 'rcptt-client-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance Standalone)', 'performance-verinice-client-log'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", 'Standalone')
                         }
                     }
@@ -86,8 +86,8 @@ pipeline {
                     steps {
                         script {
                             def target = "${outputDir}/performance-test-3-tier"
-                            runRCPTT 'rcptt-server-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)','3-tier-performance-verince-client-log'
-                            recordLogMessages '3-tier-performance-verince-server-log', "${outputDir}/performance-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
+                            runRCPTT 'rcptt-server-performance-test', branchName, jobName, productsBuild.number, null, artifactFilterRcptt, target, 'GUI Test Report (Performance 3-tier)','3-tier-performance-verinice-client-log'
+                            recordLogMessages '3-tier-performance-verinice-server-log', "${outputDir}/performance-test-3-tier", 'verinice-server.*', 'serverlogparsed-nighly.txt', 'log4j'
                             createPerformancePlot("${target}/gui-test-runner/result/metric.csv", '3-tier')
                         }
                     }

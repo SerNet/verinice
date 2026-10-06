@@ -140,7 +140,7 @@
       corresponding tasks will be created according. Therefore the whole process aims at optimising security while
       keeping the effort as low as possible.<br />
       <br />
-      The Greenbone vulnerability scan can be configured to transfer the found vulnerabilities to <b>verince.PRO</b>
+      The Greenbone vulnerability scan can be configured to transfer the found vulnerabilities to <b>verinice.PRO</b>
       automatically. In this case <b>verinice.PRO</b> compares the current scan result with the implementation status
       according to the workflow and performs necessary adjustments. Vulnerabilities that have been set to
       <b>recitified</b> falsely will be reopened - <b>verinice.PRO</b> recreates the correct links between assets and

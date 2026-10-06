@@ -22,7 +22,7 @@ package sernet.verinice.service;
 /**
  * Exception is thrown if a different 'configurationType'
  * is detected in authorization configuration files
- * 'verinice-auth-default.xml' and 'verince-auth.xml'.
+ * 'verinice-auth-default.xml' and 'verinice-auth.xml'.
  * 
  * See xml schema 'verinice-auth.xsd' for details about the configuration.
  * 

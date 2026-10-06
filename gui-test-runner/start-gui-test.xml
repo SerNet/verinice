@@ -508,8 +508,8 @@ workspace
           target: start.verinice.client              
          ================================= -->
 	<target name="start.verinice.client" depends="configure.verinice" description="start a verinice instance">
-		<echo>Start verinice: ${verince.program} on ${os.name}</echo>
-		<exec executable="${verince.program}" dir="${verinice-aut-path}" spawn="true" vmlauncher="false"/>
+		<echo>Start verinice: ${verinice.program} on ${os.name}</echo>
+		<exec executable="${verinice.program}" dir="${verinice-aut-path}" spawn="true" vmlauncher="false"/>
 		<echo>wait for verinice ...</echo>
 		<waitfor maxwait="${verinice.timeout}" maxwaitunit="second" timeoutproperty="timeout">
 			<http url="http://localhost:${verinice.server.port}/GetHitroConfig" />
@@ -714,7 +714,7 @@ ${verinice.jre}/jre/${java-library-location}
 		<sequential>
 			<echo>running client tests with target: @{target}</echo>
             <property name="mode" value="Client"/>
-			<property name="verince.program" location="${verinice-aut-path}/${verinice-executable}" />
+			<property name="verinice.program" location="${verinice-aut-path}/${verinice-executable}" />
 
 			<antcall target="configure-aut" />
 			<antcall target="start.verinice.client" />
@@ -753,7 +753,7 @@ ${verinice.jre}/jre/${java-library-location}
           target: test-v-designer             
          ================================= -->
 	<target name="test-v-designer" depends="init" description="Runs the gui tests for v-designer.">
-		<property name="verince.program" location="${verinice-aut-path}/verinice" />
+		<property name="verinice.program" location="${verinice-aut-path}/verinice" />
 
 		<antcall target="configure-v-designer-aut">
 		</antcall>
