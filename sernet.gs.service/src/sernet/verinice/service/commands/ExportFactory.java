@@ -118,6 +118,12 @@ public final class ExportFactory {
                             syncAttribute.getLimitedLicense(), syncAttribute.getLicenseContentId());
                 }
 
+                // JAXB marshals null list entries as <value xsi:nil="true"/> even though
+                // the VNA schema declares value as a non-nillable xsd:string. verinice
+                // treats null and the empty string as "unset", so export the empty
+                // string, which is valid against the schema.
+                syncAttribute.getValue().replaceAll(value -> value == null ? "" : value);
+
                 if (!syncAttribute.getValue().isEmpty()) {
                     syncAttributeList.add(syncAttribute);
                 }
